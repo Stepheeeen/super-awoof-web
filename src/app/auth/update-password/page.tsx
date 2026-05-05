@@ -80,7 +80,7 @@ function UpdatePasswordForm() {
       </div>
 
       <div className="mt-10">
-        <Button text="Update Password" onClick={handleUpdate} loading={loading} />
+        <Button text="Update Password" onClick={handleUpdate} isLoading={loading} />
       </div>
     </div>
   );

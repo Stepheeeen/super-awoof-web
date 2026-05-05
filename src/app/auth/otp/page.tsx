@@ -97,7 +97,7 @@ function OTPForm() {
         </button>
       </div>
 
-      <Button text="Verify OTP" onClick={handleVerify} loading={loading} />
+      <Button text="Verify OTP" onClick={handleVerify} isLoading={loading} />
     </div>
   );
 }

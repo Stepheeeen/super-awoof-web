@@ -138,7 +138,7 @@ function WalletContent() {
                 className="input-field bg-[#282C34]"
               />
 
-              <Button text="Withdraw" onClick={handleWithdraw} loading={loading} />
+              <Button text="Withdraw" onClick={handleWithdraw} isLoading={loading} />
             </div>
           </div>
         </div>

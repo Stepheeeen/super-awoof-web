@@ -57,7 +57,7 @@ function ForgotPasswordForm() {
       />
 
       <div className="mt-10">
-        <Button text="Reset" onClick={handleReset} loading={loading} />
+        <Button text="Reset" onClick={handleReset} isLoading={loading} />
       </div>
 
       <div className="text-center mt-4">

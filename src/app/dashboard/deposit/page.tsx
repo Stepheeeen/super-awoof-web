@@ -84,7 +84,7 @@ function DepositForm() {
           placeholder="1"
           value={coin}
           onChange={(e) => handleCoinChange(e.target.value)}
-          error={!!coin && Number(coin) < 1}
+          error={!!coin && Number(coin) < 1 ? "Minimum 1 coin" : undefined}
         />
 
         <div className="flex justify-center">
@@ -98,7 +98,7 @@ function DepositForm() {
           placeholder="25"
           value={amount}
           onChange={(e) => handleAmountChange(e.target.value)}
-          error={!!amount && Number(amount) < 25}
+          error={!!amount && Number(amount) < 25 ? "Minimum ₦25" : undefined}
         />
 
         {amount && Number(amount) < 25 && (
@@ -111,7 +111,7 @@ function DepositForm() {
           text="Continue"
           onClick={handlePay}
           disabled={!isValid}
-          loading={loading}
+          isLoading={loading}
         />
         <button
           onClick={() => router.push("/dashboard")}
