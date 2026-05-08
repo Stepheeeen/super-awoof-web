@@ -21,7 +21,7 @@ export const ResponsiveLayout = ({ children }: { children: React.ReactNode }) =>
   return (
     <div className="flex bg-[#0D0F14]" style={{ height: "100dvh", width: "100vw", overflow: "hidden" }}>
       <SideNav />
-      <main className="flex-1 relative overflow-y-auto md:h-screen pb-20 md:pb-0">
+      <main className="flex-1 overflow-hidden" style={{ height: "100dvh" }}>
         {children}
       </main>
       <div className="md:hidden">

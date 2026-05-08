@@ -47,7 +47,7 @@ function UpdatePasswordForm() {
   };
 
   return (
-    <div className="app-screen" style={{ padding: "32px 24px", justifyContent: "center" }}>
+    <div className="auth-screen" style={{ flexDirection: "column" }}>
       <div className="flex justify-center mb-8 mt-4">
         <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} style={{ height: "auto" }} />
       </div>

@@ -43,25 +43,17 @@ function SignUpEmailForm() {
   };
 
   return (
-    <div
-      className="app-screen"
-      style={{
-        padding: "24px 20px",
-        justifyContent: "center",
-        overflow: "hidden",
-      }}
-    >
+    <div className="auth-screen">
       <div className="w-full grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1100 }}>
         {/* Left – Branding */}
         <div
+          className="desktop-only"
           style={{
-            display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             padding: "60px 48px",
             gap: 32,
           }}
-          className="hidden md:flex"
         >
           <Image
             src="/images/favicon.png"
@@ -94,19 +86,18 @@ function SignUpEmailForm() {
 
         {/* Right – Form */}
         <div
-          className="card"
+          className="card auth-form-card"
           style={{ padding: "32px 24px", display: "flex", flexDirection: "column", gap: 24, width: "100%", maxHeight: "90dvh", overflowY: "auto" }}
         >
-          {/* Mobile logo */}
-          <div className="flex md:hidden items-center gap-4">
-            <Image src="/images/favicon.png" alt="Super Awoof" width={44} height={44} style={{ borderRadius: 12, height: "auto" }} />
-            <div>
-              <p className="font-display" style={{ fontSize: 20, color: "white" }}>Super Awoof</p>
-              <p style={{ fontSize: 13, color: "var(--muted)" }}>Create your account</p>
-            </div>
+          {/* Mobile Welcome Message */}
+          <div className="mobile-only text-center mb-2 flex-col">
+            <h1 className="font-display" style={{ fontSize: 32, color: "white", marginBottom: 8 }}>
+              Join us today
+            </h1>
+            <p style={{ fontSize: 14, color: "var(--muted)" }}>Create your account to start winning</p>
           </div>
 
-          <div>
+          <div className="desktop-only flex-col">
             <h2 className="font-display" style={{ fontSize: 24, color: "white", marginBottom: 4 }}>
               Create Account
             </h2>

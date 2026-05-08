@@ -88,14 +88,24 @@ function OTPForm() {
   };
 
   return (
-    <div className="app-screen" style={{ padding: "32px 24px", justifyContent: "center" }}>
-      <div className="flex justify-center mb-8 mt-4">
-        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} style={{ height: "auto" }} />
+    <div className="auth-screen" style={{ flexDirection: "column" }}>
+      {/* Mobile Welcome Message */}
+      <div className="mobile-only text-center mb-6 flex-col">
+        <h1 className="font-display" style={{ fontSize: 32, color: "white", marginBottom: 8 }}>
+          Verify OTP
+        </h1>
+        <p style={{ fontSize: 14, color: "var(--muted)" }}>Enter the 4-digit code sent to you</p>
       </div>
 
-      <div className="mb-8">
-        <h1 className="text-white font-bold text-[27px]">Verification Code</h1>
-        <p className="text-white/70 text-lg mt-2">Check your phone or email for your 4-digit OTP.</p>
+      <div className="desktop-only flex-col w-full items-center">
+        <div className="flex justify-center mb-8 mt-4">
+          <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} style={{ height: "auto" }} />
+        </div>
+
+        <div className="mb-8">
+          <h1 className="text-white font-bold text-[27px]">Verification Code</h1>
+          <p className="text-white/70 text-lg mt-2">Check your phone or email for your 4-digit OTP.</p>
+        </div>
       </div>
 
       {/* OTP boxes */}
