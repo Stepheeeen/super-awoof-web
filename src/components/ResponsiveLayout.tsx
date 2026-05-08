@@ -11,7 +11,7 @@ export const ResponsiveLayout = ({ children }: { children: React.ReactNode }) =>
   if (isShell) {
     // Auth & onboarding: full-screen, no nav
     return (
-      <div className="min-h-screen w-full bg-[#0D0F14]">
+      <div style={{ height: "100dvh", width: "100vw", overflow: "hidden" }} className="bg-[#0D0F14]">
         {children}
       </div>
     );
@@ -19,9 +19,9 @@ export const ResponsiveLayout = ({ children }: { children: React.ReactNode }) =>
 
   // Dashboard app shell: sidebar on desktop, tab bar on mobile
   return (
-    <div className="flex min-h-screen bg-[#0D0F14]">
+    <div className="flex bg-[#0D0F14]" style={{ height: "100dvh", width: "100vw", overflow: "hidden" }}>
       <SideNav />
-      <main className="flex-1 relative overflow-y-auto h-screen pb-24 md:pb-0">
+      <main className="flex-1 relative overflow-y-auto md:h-screen pb-20 md:pb-0">
         {children}
       </main>
       <div className="md:hidden">

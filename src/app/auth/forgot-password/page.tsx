@@ -6,8 +6,9 @@ import axios from "axios";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { ToastProvider, useToast } from "@/context/ToastContext";
+import { baseUrl } from "@/lib/constants";
 
-const RESET_URL = "https://super-awoof-d6b48f0a17a5.herokuapp.com/api/v1/account/request-password-reset";
+const RESET_URL = `${baseUrl}/account/request-password-reset`;
 
 function ForgotPasswordForm() {
   const router = useRouter();
@@ -36,24 +37,23 @@ function ForgotPasswordForm() {
   };
 
   return (
-    <div className="page-container min-h-screen bg-[#0F1219] px-5 py-8 animate-fade-in">
+    <div className="app-screen" style={{ padding: "32px 24px", justifyContent: "center" }}>
       <div className="flex justify-center mb-8 mt-4">
-        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} />
+        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} style={{ height: "auto" }} />
       </div>
 
       <div className="mb-8">
         <h1 className="text-white font-bold text-[27px]">Reset Your Password</h1>
         <p className="text-white/70 text-base mt-2 leading-relaxed">
-          Enter your email address and we&apos;ll send you a password reset link.
+          Enter your email or phone number and we&apos;ll send you a verification code.
         </p>
       </div>
 
       <Input
-        label="Email Address"
+        label="Email or Phone"
         placeholder="email / phone number"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        type="email"
       />
 
       <div className="mt-10">

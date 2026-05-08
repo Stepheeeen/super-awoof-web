@@ -24,13 +24,14 @@ export default function SplashScreen() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100dvh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         gap: 48,
         padding: 24,
+        overflow: "hidden",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>

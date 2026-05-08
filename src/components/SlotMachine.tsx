@@ -63,10 +63,12 @@ export const SlotMachine = ({ coins, onNoCoins, onSpin }: SlotMachineProps) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 32,
+        gap: 20,
         width: "100%",
         maxWidth: 520,
+        scale: "0.9", // Slightly scale down to ensure it fits on all mobile screens
       }}
+      className="mobile-compact-slot"
     >
       {/* Slot Frame */}
       <div

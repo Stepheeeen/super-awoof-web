@@ -41,29 +41,30 @@ function Dashboard() {
       );
     } catch (err) {
       console.error("Failed to sync coins:", err);
+      showToast("Failed to sync balance with server.", "error");
     }
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", padding: "0 0 24px" }}>
+    <div className="app-screen" style={{ padding: "0 0 16px" }}>
       {/* Top Bar */}
       <header
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "20px 32px",
+          padding: "16px 24px",
           borderBottom: "1px solid var(--border)",
           flexShrink: 0,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Image src="/images/favicon.png" alt="Super Awoof" width={36} height={36} style={{ borderRadius: 10 }} className="md:hidden" />
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Image src="/images/favicon.png" alt="Super Awoof" width={32} height={32} style={{ borderRadius: 10, height: "auto" }} className="md:hidden" />
           <div>
-            <p className="font-display" style={{ fontSize: 18, color: "white", lineHeight: 1 }}>
+            <p className="font-display" style={{ fontSize: 16, color: "white", lineHeight: 1 }}>
               Good game 🎰
             </p>
-            <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
+            <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>
               {user?.fullname ?? "Player"}
             </p>
           </div>
@@ -75,44 +76,29 @@ function Dashboard() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 10,
+            gap: 8,
             background: "var(--gold-dim)",
             border: "1px solid rgba(245,166,35,0.2)",
-            borderRadius: 14,
-            padding: "10px 18px",
+            borderRadius: 12,
+            padding: "8px 14px",
             cursor: "pointer",
             transition: "all 0.2s ease",
           }}
         >
-          <Image src="/images/AwoofCoin.png" alt="Coins" width={24} height={24} />
+          <Image src="/images/AwoofCoin.png" alt="Coins" width={20} height={20} />
           <div style={{ textAlign: "left" }}>
-            <p style={{ fontSize: 10, color: "var(--gold)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1 }}>
+            <p style={{ fontSize: 9, color: "var(--gold)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1 }}>
               Balance
             </p>
-            <p style={{ fontSize: 20, color: "white", fontWeight: 800, lineHeight: 1.2 }}>
+            <p style={{ fontSize: 16, color: "white", fontWeight: 800, lineHeight: 1.2 }}>
               {user?.coins ?? 0}
             </p>
           </div>
-          <span
-            style={{
-              background: "var(--gold)",
-              color: "#1a0e00",
-              fontSize: 16,
-              fontWeight: 900,
-              width: 26,
-              height: 26,
-              borderRadius: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: 4,
-            }}
-          >+</span>
         </button>
       </header>
 
       {/* Slot Machine Stage */}
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 24px" }}>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px 20px", overflow: "hidden" }}>
         <SlotMachine
           coins={user?.coins ?? 0}
           onNoCoins={() => setDepositModal(true)}
@@ -125,20 +111,21 @@ function Dashboard() {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 12,
-          padding: "0 24px",
+          gap: 10,
+          padding: "0 20px",
+          flexShrink: 0,
         }}
       >
         {[
-          { label: "Grand Prize",    value: "₦250,000", accent: "var(--green)" },
-          { label: "Live Players",   value: "1,284",    accent: "var(--gold)" },
-          { label: "Top Win Today",  value: "₦5,000",   accent: "var(--green)" },
+          { label: "Jackpot",    value: "₦250k", accent: "var(--green)" },
+          { label: "Players",   value: "1.2k",    accent: "var(--gold)" },
+          { label: "Top Win",  value: "₦5k",   accent: "var(--green)" },
         ].map((s) => (
-          <div key={s.label} className="stat-card" style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <p style={{ fontSize: 10, color: "var(--muted)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <div key={s.label} className="stat-card" style={{ display: "flex", flexDirection: "column", gap: 4, padding: "16px 12px" }}>
+            <p style={{ fontSize: 9, color: "var(--muted)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
               {s.label}
             </p>
-            <p className="font-display" style={{ fontSize: 22, color: "white" }}>
+            <p className="font-display" style={{ fontSize: 16, color: "white" }}>
               {s.value}
             </p>
           </div>

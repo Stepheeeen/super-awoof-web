@@ -6,8 +6,9 @@ import axios from "axios";
 import { PasswordInput } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { ToastProvider, useToast } from "@/context/ToastContext";
+import { baseUrl } from "@/lib/constants";
 
-const UPDATE_URL = "https://super-awoof-d6b48f0a17a5.herokuapp.com/api/v1/account/update/password";
+const UPDATE_URL = `${baseUrl}/account/update/password`;
 
 function UpdatePasswordForm() {
   const router = useRouter();
@@ -46,9 +47,9 @@ function UpdatePasswordForm() {
   };
 
   return (
-    <div className="page-container min-h-screen bg-[#0F1219] px-5 py-8 animate-fade-in">
+    <div className="app-screen" style={{ padding: "32px 24px", justifyContent: "center" }}>
       <div className="flex justify-center mb-8 mt-4">
-        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} />
+        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} style={{ height: "auto" }} />
       </div>
 
       <div className="mb-8">

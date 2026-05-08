@@ -31,7 +31,7 @@ export const SideNav = () => {
     >
       {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 12px 28px" }}>
-        <Image src="/images/favicon.png" alt="Super Awoof" width={36} height={36} style={{ borderRadius: 10 }} />
+        <Image src="/images/favicon.png" alt="Super Awoof" width={36} height={36} style={{ borderRadius: 10, height: "auto" }} />
         <span className="font-display" style={{ fontSize: 16, color: "white" }}>Super Awoof</span>
       </div>
 

@@ -3,44 +3,46 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
-import { Input, PasswordInput } from "@/components/Input";
+import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { ToastProvider, useToast } from "@/context/ToastContext";
-import { baseUrl } from "@/lib/constants";
+import { baseUrl, setTokens, setUser } from "@/lib/constants";
 
-function SignInForm() {
+function SignInPhoneForm() {
   const router = useRouter();
   const { showToast } = useToast();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      showToast("Please fill in all fields.", "error");
+    if (!phone) {
+      showToast("Please enter your phone number.", "error");
       return;
     }
     try {
       setLoading(true);
-      const response = await axios.post(`${baseUrl}/account/login`, { email, password });
-      const { setTokens, setUser } = await import("@/lib/constants");
-      const accountData = {
-        ...response.data.account,
-        coins: response.data.account.coins,
-        paymentMethod: response.data.paymentMethod,
-        mno: response.data.mno,
-      };
-      setUser(accountData);
-      setTokens(response.data.accessToken, response.data.refreshToken);
-      showToast("Welcome back!", "success");
-      setTimeout(() => router.push("/dashboard"), 1000);
+      // Step 1: Sign in with phone number
+      const response = await axios.post(`${baseUrl}/account/signin/phone`, { phone });
+      
+      const { isNewAccount, verifyEndpoint } = response.data;
+      
+      // Store these for the OTP verification step
+      localStorage.setItem("pendingPhone", phone);
+      localStorage.setItem("isNewAccount", String(isNewAccount));
+      localStorage.setItem("verifyEndpoint", verifyEndpoint);
+
+      showToast("Verification code sent!", "success");
+      setTimeout(() => router.push("/auth/otp"), 1000);
     } catch (error: any) {
-      const msg = error.response?.data?.message || "An error occurred. Try again.";
-      if (msg === "Please verify your account in order to login") {
-        showToast(msg, "error");
-        setTimeout(() => router.push("/auth/otp"), 800);
+      const status = error.response?.status;
+      const data = error.response?.data;
+
+      if (status === 406) {
+        showToast("Please enter a valid MTN number.", "error");
+      } else if (status === 400 && data?.message?.includes("subscription")) {
+        showToast("Please subscribe by sending 'SA1' to 20138 on MTN", "error");
       } else {
-        showToast(msg, "error");
+        showToast(data?.message || "An error occurred. Try again.", "error");
       }
     } finally {
       setLoading(false);
@@ -50,14 +52,14 @@ function SignInForm() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100dvh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "40px 24px",
+        padding: "24px 20px",
+        overflow: "hidden",
       }}
     >
-      {/* Two-column layout on large screens */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1100 }}>
         {/* Left – Branding */}
         <div
@@ -75,27 +77,20 @@ function SignInForm() {
             alt="Super Awoof"
             width={72}
             height={72}
-            style={{ borderRadius: 20 }}
+            style={{ borderRadius: 20, height: "auto" }}
           />
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <h1 className="font-display" style={{ fontSize: 48, lineHeight: 1.1, color: "white" }}>
               Welcome<br />back.
             </h1>
             <p style={{ fontSize: 16, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: 340 }}>
-              Log in to your account and continue your winning streak on Super Awoof.
+              Log in with your phone number to continue your winning streak.
             </p>
           </div>
-
           <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 16 }}>
             {["Instant payouts", "Provably fair", "Secure platform"].map((f) => (
               <div key={f} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div
-                  style={{
-                    width: 8, height: 8, borderRadius: "50%",
-                    background: "var(--green)",
-                  }}
-                  className="pulse-dot"
-                />
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)" }} className="pulse-dot" />
                 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>{f}</span>
               </div>
             ))}
@@ -103,71 +98,57 @@ function SignInForm() {
         </div>
 
         {/* Right – Form */}
-        <div
-          className="card"
-          style={{ padding: "56px 48px", display: "flex", flexDirection: "column", gap: 40 }}
+        <div 
+          className="card" 
+          style={{ 
+            padding: "32px 24px", 
+            display: "flex", 
+            flexDirection: "column", 
+            gap: 24,
+            width: "100%",
+            maxHeight: "90dvh",
+            overflowY: "auto"
+          }}
         >
           {/* Mobile logo */}
           <div className="flex md:hidden items-center gap-4">
-            <Image src="/images/favicon.png" alt="Super Awoof" width={44} height={44} style={{ borderRadius: 12 }} />
+            <Image src="/images/favicon.png" alt="Super Awoof" width={44} height={44} style={{ borderRadius: 12, height: "auto" }} />
             <div>
               <p className="font-display" style={{ fontSize: 20, color: "white" }}>Super Awoof</p>
-              <p style={{ fontSize: 13, color: "var(--muted)" }}>Sign in to play</p>
+              <p style={{ fontSize: 13, color: "var(--muted)" }}>Sign in with phone</p>
             </div>
           </div>
 
           <div>
-            <h2 className="font-display" style={{ fontSize: 32, color: "white", marginBottom: 8 }}>
-              Sign In
-            </h2>
-            <p style={{ fontSize: 14, color: "var(--muted)" }}>Enter your credentials to continue</p>
+            <h2 className="font-display" style={{ fontSize: 24, color: "white", marginBottom: 4 }}>Sign In</h2>
+            <p style={{ fontSize: 13, color: "var(--muted)" }}>Enter your phone number to continue</p>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <Input
-              label="Email Address"
-              placeholder="you@example.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <PasswordInput
-              label="Password"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              label="Phone Number"
+              placeholder="+234 800 000 0000"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <Button text="Sign In" onClick={handleLogin} isLoading={loading} />
             <button
-              onClick={() => router.push("/auth/signin/phone")}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 13, color: "var(--muted)", textAlign: "center",
-              }}
+              onClick={() => router.push("/auth/signin/email")}
+              style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--muted)", textAlign: "center" }}
             >
-              Use phone number instead
+              Use email instead
             </button>
           </div>
 
-          <div
-            style={{
-              borderTop: "1px solid var(--border)",
-              paddingTop: 24,
-              textAlign: "center",
-              fontSize: 14,
-              color: "var(--muted)",
-            }}
-          >
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: 24, textAlign: "center", fontSize: 14, color: "var(--muted)" }}>
             New to Super Awoof?{" "}
             <button
               onClick={() => router.push("/auth/signup")}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                color: "var(--green)", fontWeight: 700,
-              }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "var(--green)", fontWeight: 700 }}
             >
               Create account
             </button>
@@ -181,7 +162,7 @@ function SignInForm() {
 export default function SignInPage() {
   return (
     <ToastProvider>
-      <SignInForm />
+      <SignInPhoneForm />
     </ToastProvider>
   );
 }

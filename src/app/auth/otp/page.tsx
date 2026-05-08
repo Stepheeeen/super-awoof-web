@@ -6,8 +6,10 @@ import axios from "axios";
 import { Button } from "@/components/Button";
 import { ToastProvider, useToast } from "@/context/ToastContext";
 
-const VERIFY_URL = "https://super-awoof-d6b48f0a17a5.herokuapp.com/api/v1/account/verify";
-const RESEND_URL = "https://super-awoof-d6b48f0a17a5.herokuapp.com/api/v1/account/send-otp";
+import { baseUrl } from "@/lib/constants";
+
+const VERIFY_URL = `${baseUrl}/account/verify`;
+const RESEND_URL = `${baseUrl}/account/send-otp`;
 
 function OTPForm() {
   const router = useRouter();
@@ -30,18 +32,38 @@ function OTPForm() {
   };
 
   const handleVerify = async () => {
-    const code = otp.join("");
-    if (code.length !== 4) {
-      showToast("Please enter the complete 4-digit OTP.", "error");
+    if (otp.length < 4) {
+      showToast("Please enter the 4-digit code.", "error");
       return;
     }
     try {
       setLoading(true);
-      await axios.post(VERIFY_URL, { otp: code });
-      showToast("OTP verified successfully!", "success");
-      setTimeout(() => router.push("/auth/signin"), 1200);
+      
+      // Step 2: Verify OTP
+      // Use the endpoint stored from step 1, or fallback to verify-otp
+      const storedEndpoint = localStorage.getItem("verifyEndpoint") || "/account/verify-otp";
+      const isNewAccount = localStorage.getItem("isNewAccount") === "true";
+      
+      const response = await axios.post(`${baseUrl}${storedEndpoint}`, { otp: otp.join("") });
+
+      if (response.status === 200) {
+        const { accessToken, refreshToken, account } = response.data;
+        
+        if (accessToken) {
+          // Store tokens and user data
+          setTokens(accessToken, refreshToken);
+          setUser(account);
+          
+          showToast(isNewAccount ? "Account created successfully!" : "Logged in successfully!", "success");
+          setTimeout(() => router.push("/dashboard"), 1200);
+        } else {
+          // Fallback for unexpected response structure
+          showToast("Verification successful!", "success");
+          setTimeout(() => router.push("/auth/signin"), 1200);
+        }
+      }
     } catch (error: any) {
-      showToast(error.response?.data?.message || "OTP verification failed.", "error");
+      showToast(error.response?.data?.message || "Invalid or expired code. Please try again.", "error");
     } finally {
       setLoading(false);
     }
@@ -50,24 +72,30 @@ function OTPForm() {
   const handleResend = async () => {
     try {
       setResending(true);
-      await axios.post(RESEND_URL);
-      showToast("OTP has been resent!", "success");
-    } catch {
-      showToast("Failed to resend OTP.", "error");
+      const phone = localStorage.getItem("pendingPhone");
+      if (!phone) {
+        showToast("Phone number not found. Please sign in again.", "error");
+        router.push("/auth/signin");
+        return;
+      }
+      await axios.post(`${baseUrl}/account/signin/phone`, { phone });
+      showToast("Code resent!", "success");
+    } catch (error: any) {
+      showToast("Failed to resend code. Try again.", "error");
     } finally {
       setResending(false);
     }
   };
 
   return (
-    <div className="page-container min-h-screen bg-[#0F1219] px-5 py-8 animate-fade-in">
+    <div className="app-screen" style={{ padding: "32px 24px", justifyContent: "center" }}>
       <div className="flex justify-center mb-8 mt-4">
-        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} />
+        <Image src="/images/favicon.png" alt="Super Awoof" width={48} height={48} style={{ height: "auto" }} />
       </div>
 
       <div className="mb-8">
-        <h1 className="text-white font-bold text-[27px]">Email Verification Code</h1>
-        <p className="text-white/70 text-lg mt-2">Check your email for your 4-digit OTP.</p>
+        <h1 className="text-white font-bold text-[27px]">Verification Code</h1>
+        <p className="text-white/70 text-lg mt-2">Check your phone or email for your 4-digit OTP.</p>
       </div>
 
       {/* OTP boxes */}

@@ -32,19 +32,18 @@ export function OnboardingTemplate({ index, nextPath, nextLabel }: OnboardingPag
 
   return (
     <div
+      className="app-screen"
       style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        padding: "48px 32px",
+        padding: "32px 24px 24px",
         maxWidth: 520,
         margin: "0 auto",
-        gap: 40,
+        gap: 20,
+        justifyContent: "space-between"
       }}
     >
       {/* Top – Logo */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Image src="/images/favicon.png" alt="Super Awoof" width={40} height={40} style={{ borderRadius: 12 }} />
+        <Image src="/images/favicon.png" alt="Super Awoof" width={40} height={40} style={{ borderRadius: 12, height: "auto" }} />
         <button
           onClick={() => router.push("/auth/signin")}
           style={{
@@ -88,7 +87,7 @@ export function OnboardingTemplate({ index, nextPath, nextLabel }: OnboardingPag
       </div>
 
       {/* Content */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         {/* Dots */}
         <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
           {slides.map((s, i) => (
@@ -110,11 +109,11 @@ export function OnboardingTemplate({ index, nextPath, nextLabel }: OnboardingPag
         </div>
 
         {/* Text */}
-        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 12 }}>
-          <h1 className="font-display" style={{ fontSize: 34, color: "white", lineHeight: 1.2 }}>
+        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 8 }}>
+          <h1 className="font-display" style={{ fontSize: 28, color: "white", lineHeight: 1.2 }}>
             {slide.title}
           </h1>
-          <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 15, color: "var(--muted)", lineHeight: 1.6 }}>
             {slide.body}
           </p>
         </div>

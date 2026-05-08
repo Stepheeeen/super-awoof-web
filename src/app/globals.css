@@ -184,3 +184,67 @@ input:-webkit-autofill:active {
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
+.app-screen {
+  height: 100dvh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 24px 20px !important;
+    border-radius: 20px;
+  }
+  .input, .btn {
+    height: 56px !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .mobile-compact-slot {
+    scale: 1 !important;
+    gap: 32 !important;
+  }
+}
+/* ─── Toast ──────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: toastFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  min-width: 280px;
+  max-width: 90vw;
+  text-align: center;
+  justify-content: center;
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.toast-success {
+  background: #1DB954;
+  border: 1.5px solid rgba(255,255,255,0.15);
+}
+
+.toast-error {
+  background: #E91E63;
+  border: 1.5px solid rgba(255,255,255,0.15);
+}

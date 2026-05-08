@@ -8,29 +8,24 @@ import { Button } from "@/components/Button";
 import { ToastProvider, useToast } from "@/context/ToastContext";
 import { baseUrl } from "@/lib/constants";
 
-function SignUpForm() {
+function SignUpPhoneForm() {
   const router = useRouter();
   const { showToast } = useToast();
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    if (!fullName || !email || !password || !confirmPassword) {
+    if (!fullName || !phone || !password) {
       showToast("Please fill in all fields.", "error");
-      return;
-    }
-    if (password !== confirmPassword) {
-      showToast("Passwords do not match!", "error");
       return;
     }
     try {
       setLoading(true);
       const response = await axios.post(`${baseUrl}/account/register`, {
         fullname: fullName,
-        email,
+        phone,
         password,
       });
       showToast(response.data.msg || "Account created!", "success");
@@ -45,11 +40,12 @@ function SignUpForm() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100dvh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "40px 24px",
+        padding: "24px 20px",
+        overflow: "hidden",
       }}
     >
       <div className="w-full grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1100 }}>
@@ -69,24 +65,20 @@ function SignUpForm() {
             alt="Super Awoof"
             width={72}
             height={72}
-            style={{ borderRadius: 20 }}
+            style={{ borderRadius: 20, height: "auto" }}
           />
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <h1 className="font-display" style={{ fontSize: 48, lineHeight: 1.1, color: "white" }}>
               Start<br />winning today.
             </h1>
             <p style={{ fontSize: 16, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, maxWidth: 340 }}>
-              Create your Super Awoof account and join thousands of players already winning big.
+              Register with your phone number to get started on Super Awoof.
             </p>
           </div>
-
           <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 16 }}>
             {["Free to join", "Instant payouts", "Play anytime, anywhere"].map((f) => (
               <div key={f} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div
-                  style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)" }}
-                  className="pulse-dot"
-                />
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)" }} className="pulse-dot" />
                 <span style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>{f}</span>
               </div>
             ))}
@@ -94,24 +86,30 @@ function SignUpForm() {
         </div>
 
         {/* Right – Form */}
-        <div
-          className="card"
-          style={{ padding: "56px 48px", display: "flex", flexDirection: "column", gap: 36 }}
+        <div 
+          className="card" 
+          style={{ 
+            padding: "32px 24px", 
+            display: "flex", 
+            flexDirection: "column", 
+            gap: 20,
+            width: "100%",
+            maxHeight: "90dvh",
+            overflowY: "auto"
+          }}
         >
           {/* Mobile logo */}
           <div className="flex md:hidden items-center gap-4">
-            <Image src="/images/favicon.png" alt="Super Awoof" width={44} height={44} style={{ borderRadius: 12 }} />
+            <Image src="/images/favicon.png" alt="Super Awoof" width={44} height={44} style={{ borderRadius: 12, height: "auto" }} />
             <div>
               <p className="font-display" style={{ fontSize: 20, color: "white" }}>Super Awoof</p>
-              <p style={{ fontSize: 13, color: "var(--muted)" }}>Create your account</p>
+              <p style={{ fontSize: 13, color: "var(--muted)" }}>Register with phone</p>
             </div>
           </div>
 
           <div>
-            <h2 className="font-display" style={{ fontSize: 32, color: "white", marginBottom: 8 }}>
-              Create Account
-            </h2>
-            <p style={{ fontSize: 14, color: "var(--muted)" }}>Fill in your details to get started</p>
+            <h2 className="font-display" style={{ fontSize: 24, color: "white", marginBottom: 4 }}>Create Account</h2>
+            <p style={{ fontSize: 13, color: "var(--muted)" }}>Register using your phone number</p>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -122,55 +120,35 @@ function SignUpForm() {
               onChange={(e) => setFullName(e.target.value)}
             />
             <Input
-              label="Email Address"
-              placeholder="you@example.com"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Phone Number"
+              placeholder="+234 800 000 0000"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
             <PasswordInput
-              label="Create Password"
+              label="Password"
               placeholder="Min. 8 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            />
-            <PasswordInput
-              label="Confirm Password"
-              placeholder="Repeat your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <Button text="Create Account" onClick={handleRegister} isLoading={loading} />
             <button
-              onClick={() => router.push("/auth/signup/phone")}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 13, color: "var(--muted)", textAlign: "center",
-              }}
+              onClick={() => router.push("/auth/signup/email")}
+              style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--muted)", textAlign: "center" }}
             >
-              Register with phone number instead
+              Use email instead
             </button>
           </div>
 
-          <div
-            style={{
-              borderTop: "1px solid var(--border)",
-              paddingTop: 24,
-              textAlign: "center",
-              fontSize: 14,
-              color: "var(--muted)",
-            }}
-          >
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: 24, textAlign: "center", fontSize: 14, color: "var(--muted)" }}>
             Already have an account?{" "}
             <button
               onClick={() => router.push("/auth/signin")}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                color: "var(--green)", fontWeight: 700,
-              }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "var(--green)", fontWeight: 700 }}
             >
               Sign in
             </button>
@@ -184,7 +162,7 @@ function SignUpForm() {
 export default function SignUpPage() {
   return (
     <ToastProvider>
-      <SignUpForm />
+      <SignUpPhoneForm />
     </ToastProvider>
   );
 }
