@@ -110,7 +110,7 @@ function SignUpPhoneForm() {
             />
             <Input
               label="Phone Number"
-              placeholder="+234 800 000 0000"
+              placeholder="0800 000 0000"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
