@@ -5,6 +5,10 @@ import { ResponsiveLayout } from "@/components/ResponsiveLayout";
 export const metadata: Metadata = {
   title: "Super Awoof – Win Big with Every Spin",
   description: "Spin the reels and win big. Join thousands of players already winning on Super Awoof.",
+  icons: {
+    icon: "/images/favicon.png",
+    apple: "/images/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
