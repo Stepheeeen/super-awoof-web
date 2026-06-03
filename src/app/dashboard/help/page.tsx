@@ -29,17 +29,18 @@ export default function HelpPage() {
 
   return (
     <div className="app-screen anim-fade-up" style={{ padding: "24px 20px 80px", overflowY: "auto" }}>
-      {/* Header */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 28 }}>
-        <h1 className="font-display" style={{ fontSize: 28, color: "white" }}>
-          Help & Support
-        </h1>
-        <p style={{ fontSize: 13, color: "var(--muted)" }}>
-          Find answers to common questions and learn how to use Super Awoof.
-        </p>
-      </div>
+      <div style={{ maxWidth: 600, margin: "0 auto", width: "100%" }}>
+        {/* Header */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 28 }}>
+          <h1 className="font-display" style={{ fontSize: 28, color: "white" }}>
+            Help & Support
+          </h1>
+          <p style={{ fontSize: 13, color: "var(--muted)" }}>
+            Find answers to common questions and learn how to use Super Awoof.
+          </p>
+        </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 600 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         {/* Support Card */}
         <div className="card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 12 }}>
           <h2 className="font-display" style={{ fontSize: 18, color: "white" }}>
@@ -113,6 +114,7 @@ export default function HelpPage() {
           })}
         </div>
       </div>
+    </div>
     </div>
   );
 }

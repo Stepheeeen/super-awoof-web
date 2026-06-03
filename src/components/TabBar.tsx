@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 const tabs = [
   { path: "/dashboard",         label: "Play",    activeIcon: "/images/homeActiveIcon.png",    inactiveIcon: "/images/homeNotActiveIcon.png" },
+  { path: "/dashboard/wallet",  label: "Wallet",  activeIcon: "/images/money.png",             inactiveIcon: "/images/money.png" },
   { path: "/dashboard/help",    label: "Help",    activeIcon: "/images/helpActiveIcon.png",    inactiveIcon: "/images/helpNotActiveIcon.png" },
   { path: "/dashboard/profile", label: "Profile", activeIcon: "/images/profileActiveIcon.png", inactiveIcon: "/images/profileNotActiveIcon.png" },
 ];
