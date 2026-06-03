@@ -66,13 +66,18 @@ function OTPForm() {
     try {
       setResending(true);
       const phone = localStorage.getItem("pendingPhone");
-      if (!phone) {
-        showToast("Phone number not found. Please sign in again.", "error");
+      const email = localStorage.getItem("pendingEmail");
+
+      if (phone) {
+        await axios.post(`${baseUrl}/account/signin/phone`, { phone });
+        showToast("Code resent to your phone!", "success");
+      } else if (email) {
+        await axios.post(`${baseUrl}/account/send-otp`, { emailOrPhone: email });
+        showToast("Code resent to your email!", "success");
+      } else {
+        showToast("Contact details not found. Please sign in again.", "error");
         router.push("/auth/signin");
-        return;
       }
-      await axios.post(`${baseUrl}/account/signin/phone`, { phone });
-      showToast("Code resent!", "success");
     } catch {
       showToast("Failed to resend code. Try again.", "error");
     } finally {

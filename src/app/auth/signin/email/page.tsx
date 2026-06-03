@@ -30,8 +30,18 @@ function SignInEmailForm() {
     } catch (error: any) {
       const msg = error.response?.data?.message || "An error occurred. Try again.";
       if (msg === "Please verify your account in order to login") {
-        showToast(msg, "error");
-        setTimeout(() => router.push("/auth/otp"), 800);
+        showToast("Account unverified. Sending verification code...", "error");
+        try {
+          await axios.post(`${baseUrl}/account/send-otp`, { emailOrPhone: email });
+          localStorage.setItem("pendingEmail", email);
+          localStorage.removeItem("pendingPhone");
+          localStorage.setItem("verifyEndpoint", "/account/verify");
+          localStorage.setItem("isNewAccount", "true");
+          showToast("Verification code sent to your email!", "success");
+          setTimeout(() => router.push("/auth/otp"), 1200);
+        } catch (otpErr: any) {
+          showToast(otpErr.response?.data?.message || "Failed to send verification code. Try again.", "error");
+        }
       } else {
         showToast(msg, "error");
       }

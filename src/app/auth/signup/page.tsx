@@ -29,6 +29,10 @@ function SignUpPhoneForm() {
         password,
       });
       showToast(response.data.msg || "Account created!", "success");
+      localStorage.setItem("pendingPhone", phone);
+      localStorage.removeItem("pendingEmail");
+      localStorage.setItem("verifyEndpoint", "/account/verify");
+      localStorage.setItem("isNewAccount", "true");
       setTimeout(() => router.push("/auth/otp"), 1200);
     } catch (error: any) {
       showToast(error.response?.data?.error || "Registration failed. Try again.", "error");

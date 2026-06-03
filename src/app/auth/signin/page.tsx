@@ -28,6 +28,7 @@ function SignInPhoneForm() {
       
       // Store these for the OTP verification step
       localStorage.setItem("pendingPhone", phone);
+      localStorage.removeItem("pendingEmail");
       localStorage.setItem("isNewAccount", String(isNewAccount));
       localStorage.setItem("verifyEndpoint", verifyEndpoint);
 
