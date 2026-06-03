@@ -68,57 +68,59 @@ function DepositForm() {
 
   return (
     <div className="page-container min-h-screen bg-[#0F1219] px-5 py-8 animate-fade-in pb-24">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <button onClick={() => router.back()} className="text-white/70 hover:text-white">
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 className="text-white font-bold text-2xl">Deposit</h1>
-      </div>
-
-      <div className="flex flex-col gap-5">
-        <Input
-          label="Coins"
-          placeholder="1"
-          value={coin}
-          onChange={(e) => handleCoinChange(e.target.value)}
-          error={!!coin && Number(coin) < 1 ? "Minimum 1 coin" : undefined}
-        />
-
-        <div className="flex justify-center">
-          <div className="flex gap-2 text-white/60">
-            <ArrowDownUp size={22} />
-          </div>
+      <div style={{ maxWidth: 600, margin: "0 auto", width: "100%" }}>
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <button onClick={() => router.back()} className="text-white/70 hover:text-white">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-white font-bold text-2xl">Deposit</h1>
         </div>
 
-        <Input
-          label="Amount (Naira)"
-          placeholder="25"
-          value={amount}
-          onChange={(e) => handleAmountChange(e.target.value)}
-          error={!!amount && Number(amount) < 25 ? "Minimum ₦25" : undefined}
-        />
+        <div className="flex flex-col gap-5">
+          <Input
+            label="Coins"
+            placeholder="1"
+            value={coin}
+            onChange={(e) => handleCoinChange(e.target.value)}
+            error={!!coin && Number(coin) < 1 ? "Minimum 1 coin" : undefined}
+          />
 
-        {amount && Number(amount) < 25 && (
-          <p className="text-red-500 text-sm -mt-2">Minimum amount is ₦25</p>
-        )}
-      </div>
+          <div className="flex justify-center">
+            <div className="flex gap-2 text-white/60">
+              <ArrowDownUp size={22} />
+            </div>
+          </div>
 
-      <div className="mt-10">
-        <Button
-          text="Continue"
-          onClick={handlePay}
-          disabled={!isValid}
-          isLoading={loading}
-        />
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="w-full text-center text-[#00A859] mt-3 text-base underline py-2"
-        >
-          Cancel
-        </button>
+          <Input
+            label="Amount (Naira)"
+            placeholder="25"
+            value={amount}
+            onChange={(e) => handleAmountChange(e.target.value)}
+            error={!!amount && Number(amount) < 25 ? "Minimum ₦25" : undefined}
+          />
+
+          {amount && Number(amount) < 25 && (
+            <p className="text-red-500 text-sm -mt-2">Minimum amount is ₦25</p>
+          )}
+        </div>
+
+        <div className="mt-10">
+          <Button
+            text="Continue"
+            onClick={handlePay}
+            disabled={!isValid}
+            isLoading={loading}
+          />
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="w-full text-center text-[#00A859] mt-3 text-base underline py-2"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
 
       {/* Paystack iFrame Overlay */}

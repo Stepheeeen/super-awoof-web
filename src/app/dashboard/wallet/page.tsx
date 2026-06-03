@@ -71,29 +71,31 @@ function WalletContent() {
 
   return (
     <div className="page-container min-h-screen bg-[#0F1219] px-4 py-8 animate-fade-in pb-24">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <button onClick={() => router.back()} className="text-white/70 hover:text-white">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="text-white font-bold text-2xl mx-auto pr-8">Wallet</h1>
-      </div>
+      <div style={{ maxWidth: 600, margin: "0 auto", width: "100%" }}>
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-8">
+          <button onClick={() => router.back()} className="text-white/70 hover:text-white">
+            <ChevronLeft size={26} />
+          </button>
+          <h1 className="text-white font-bold text-2xl mx-auto pr-8">Wallet</h1>
+        </div>
 
-      {/* Wallet Card */}
-      <div
-        className="relative w-full rounded-2xl overflow-hidden h-48"
-        style={{ background: "linear-gradient(135deg, #00A859 0%, #004d29 100%)" }}
-      >
-        <Image src="/images/WalletBg.png" alt="" fill className="object-cover opacity-20" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-center p-6">
-          <p className="text-white/80 text-sm mb-1">Wallet Balance</p>
-          <p className="text-white text-5xl font-bold mb-6">₦{balance}</p>
-          <Button
-            text="Withdraw"
-            onClick={() => setShowModal(true)}
-            disabled={balance === "0"}
-            className="max-w-[200px]"
-          />
+        {/* Wallet Card */}
+        <div
+          className="relative w-full rounded-2xl overflow-hidden h-48"
+          style={{ background: "linear-gradient(135deg, #00A859 0%, #004d29 100%)" }}
+        >
+          <Image src="/images/WalletBg.png" alt="" fill className="object-cover opacity-20" />
+          <div className="relative z-10 h-full flex flex-col items-center justify-center p-6">
+            <p className="text-white/80 text-sm mb-1">Wallet Balance</p>
+            <p className="text-white text-5xl font-bold mb-6">₦{balance}</p>
+            <Button
+              text="Withdraw"
+              onClick={() => setShowModal(true)}
+              disabled={balance === "0"}
+              className="max-w-[200px]"
+            />
+          </div>
         </div>
       </div>
 

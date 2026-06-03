@@ -16,7 +16,7 @@ export const SideNav = () => {
 
   return (
     <aside
-      className="hidden md:flex"
+      className="desktop-only"
       style={{
         width: 220,
         flexShrink: 0,
