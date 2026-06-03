@@ -5,7 +5,6 @@ import Image from "next/image";
 import axios from "axios";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
-import { TabBar } from "@/components/TabBar";
 import { ToastProvider, useToast } from "@/context/ToastContext";
 import { baseUrl, getAccessToken } from "@/lib/constants";
 import { ArrowDownUp, X } from "lucide-react";
@@ -140,7 +139,6 @@ function DepositForm() {
         </div>
       )}
 
-      <TabBar />
     </div>
   );
 }

@@ -46,7 +46,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="app-screen" style={{ padding: "0 0 16px" }}>
+    <div className="app-screen pb-[112px] md:pb-4">
       {/* Top Bar */}
       <header
         style={{

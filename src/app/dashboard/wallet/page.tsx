@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
 import { Button } from "@/components/Button";
-import { TabBar } from "@/components/TabBar";
 import { ToastProvider, useToast } from "@/context/ToastContext";
 import { baseUrl, getAccessToken } from "@/lib/constants";
 import { X, ChevronLeft } from "lucide-react";
@@ -146,7 +145,6 @@ function WalletContent() {
         </div>
       )}
 
-      <TabBar />
     </div>
   );
 }

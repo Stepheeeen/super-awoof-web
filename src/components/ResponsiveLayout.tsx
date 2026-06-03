@@ -24,13 +24,18 @@ export const ResponsiveLayout = ({ children }: { children: React.ReactNode }) =>
       <main className="flex-1 overflow-hidden" style={{ height: "100dvh" }}>
         {children}
       </main>
-      <div className="md:hidden">
+      <div className="md:hidden" style={{ position: "absolute" }}>
         {/* Flair Technologies Credit — mobile only */}
         <a
           href="https://www.flairtechlabs.com"
           target="_blank"
           rel="noopener noreferrer"
           style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 90,
             display: "block",
             textAlign: "center",
             fontSize: 9,
