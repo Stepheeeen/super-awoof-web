@@ -18,26 +18,30 @@ export const SideNav = () => {
     <aside
       className="desktop-only"
       style={{
-        width: 220,
+        width: 240,
         flexShrink: 0,
         height: "100vh",
         position: "sticky",
         top: 0,
         flexDirection: "column",
         background: "var(--surface)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         borderRight: "1px solid var(--border)",
         padding: "32px 16px",
         gap: 8,
+        zIndex: 40,
+        boxShadow: "var(--glass-shadow)",
       }}
     >
       {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 12px 28px" }}>
         <Image src="/images/favicon.png" alt="Super Awoof" width={36} height={36} style={{ borderRadius: 10, height: "auto" }} />
-        <span className="font-display" style={{ fontSize: 16, color: "white" }}>Super Awoof</span>
+        <span className="font-display" style={{ fontSize: 18, color: "white", letterSpacing: "-0.03em" }}>Super Awoof</span>
       </div>
 
       {/* Nav Links */}
-      <nav style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
+      <nav style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
         {tabs.map((tab) => {
           const isActive = pathname === tab.path;
           return (
@@ -48,14 +52,28 @@ export const SideNav = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
-                padding: "12px 14px",
-                borderRadius: 14,
+                padding: "14px 16px",
+                borderRadius: 16,
                 textDecoration: "none",
                 background: isActive ? "var(--green-dim)" : "transparent",
                 color: isActive ? "var(--green)" : "var(--muted)",
-                fontWeight: isActive ? 700 : 500,
-                fontSize: 14,
-                transition: "all 0.2s ease",
+                fontWeight: isActive ? 800 : 600,
+                fontSize: 15,
+                transition: "all 0.3s ease",
+                border: isActive ? "1px solid var(--green-glow)" : "1px solid transparent",
+                boxShadow: isActive ? "0 4px 12px var(--green-dim)" : "none",
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                  e.currentTarget.style.color = "white";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--muted)";
+                }
               }}
             >
               <Image

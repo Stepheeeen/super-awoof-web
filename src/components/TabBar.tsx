@@ -19,17 +19,21 @@ export const TabBar = () => {
       className="mobile-only"
       style={{
         position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
+        bottom: 24,
+        left: 16,
+        right: 16,
         height: 72,
         background: "var(--surface)",
-        borderTop: "1px solid var(--border)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        border: "1px solid var(--border)",
+        borderRadius: 36,
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "space-evenly",
         zIndex: 100,
-        paddingBottom: 4,
+        boxShadow: "var(--glass-shadow)",
+        padding: "0 8px",
       }}
     >
       {tabs.map((tab) => {
@@ -42,11 +46,14 @@ export const TabBar = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 5,
+              justifyContent: "center",
+              gap: 4,
               textDecoration: "none",
-              padding: "8px 20px",
-              borderRadius: 12,
+              padding: "10px 16px",
+              borderRadius: 24,
               color: isActive ? "var(--green)" : "var(--muted)",
+              background: isActive ? "var(--green-dim)" : "transparent",
+              transition: "all 0.3s ease",
             }}
           >
             <Image
@@ -54,9 +61,9 @@ export const TabBar = () => {
               alt={tab.label}
               width={22}
               height={22}
-              style={{ objectFit: "contain", opacity: isActive ? 1 : 0.4 }}
+              style={{ objectFit: "contain", opacity: isActive ? 1 : 0.5, filter: isActive ? "drop-shadow(0 0 8px var(--green-glow))" : "none" }}
             />
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            <span style={{ fontSize: 10, fontWeight: isActive ? 800 : 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               {tab.label}
             </span>
           </Link>
