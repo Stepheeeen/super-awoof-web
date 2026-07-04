@@ -15,14 +15,15 @@ function SignInPhoneForm() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!phone) {
-      showToast("Please enter your phone number.", "error");
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (!cleanPhone || cleanPhone.length < 10 || cleanPhone.length > 11) {
+      showToast("Please enter a valid 10 or 11-digit phone number.", "error");
       return;
     }
     try {
       setLoading(true);
       // Step 1: Sign in with phone number
-      const response = await axios.post(`${baseUrl}/account/signin/phone`, { phone });
+      const response = await axios.post(`${baseUrl}/account/signin/phone`, { phone: cleanPhone });
       
       const { isNewAccount, verifyEndpoint } = response.data;
       

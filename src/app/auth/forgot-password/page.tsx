@@ -26,11 +26,13 @@ function ForgotPasswordForm() {
       const response = await axios.post(RESET_URL, { email });
       if (response.status === 200) {
         localStorage.setItem("passwordEmailReset", email);
-        showToast("A password reset link has been sent to your email.", "success");
+        const endpoint = response.data?.verifyEndpoint || "/account/verify-otp";
+        localStorage.setItem("verifyEndpoint", endpoint);
+        showToast(response.data?.message || "A reset code has been sent to your email.", "success");
         setTimeout(() => router.push("/auth/forgot-password/otp"), 1200);
       }
-    } catch {
-      showToast("Failed to send reset link. Please check your email.", "error");
+    } catch (error: any) {
+      showToast(error.response?.data?.message || "Failed to send reset link. Please check your email.", "error");
     } finally {
       setLoading(false);
     }

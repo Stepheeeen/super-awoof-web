@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ResponsiveLayout } from "@/components/ResponsiveLayout";
+import { ToastProvider } from "@/context/ToastContext";
 
 export const metadata: Metadata = {
   title: "Super Awoof – Win Big with Every Spin",
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <ResponsiveLayout>{children}</ResponsiveLayout>
+        <ToastProvider>
+          <ResponsiveLayout>{children}</ResponsiveLayout>
+        </ToastProvider>
       </body>
     </html>
   );

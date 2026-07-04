@@ -15,7 +15,7 @@ const slides = [
     id: 2,
     image: "/images/coins.png",
     title: "Easy Deposits, Big Rewards",
-    body: "Deposit ₦1,000 to get 400 coins and start playing instantly. Cash out your wins anytime.",
+    body: "Deposit ₦1,000 to get 40 coins and start playing instantly. Cash out your wins anytime.",
     path: "/onboarding/tab2",
   },
 ];

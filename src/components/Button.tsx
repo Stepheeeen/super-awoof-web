@@ -9,6 +9,7 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   isLoading?: boolean;
+  style?: React.CSSProperties;
 }
 
 export const Button = ({
@@ -19,6 +20,7 @@ export const Button = ({
   disabled = false,
   className = "",
   isLoading = false,
+  style,
 }: ButtonProps) => {
   return (
     <button
@@ -26,6 +28,7 @@ export const Button = ({
       onClick={onClick}
       disabled={disabled || isLoading}
       className={`btn ${variant === "danger" ? "bg-[#FF4D4D] text-white" : "btn-primary"} ${className}`}
+      style={style}
     >
       {isLoading ? (
         <div className="spinner" />

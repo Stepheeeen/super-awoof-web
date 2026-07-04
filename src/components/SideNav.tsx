@@ -4,11 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
+import { Gamepad2, Wallet, HelpCircle, User } from "lucide-react";
+
 const tabs = [
-  { path: "/dashboard",         label: "Play",    activeIcon: "/images/homeActiveIcon.png",    inactiveIcon: "/images/homeNotActiveIcon.png" },
-  { path: "/dashboard/wallet",  label: "Wallet",  activeIcon: "/images/money.png",             inactiveIcon: "/images/money.png" },
-  { path: "/dashboard/help",    label: "Help",    activeIcon: "/images/helpActiveIcon.png",    inactiveIcon: "/images/helpNotActiveIcon.png" },
-  { path: "/dashboard/profile", label: "Profile", activeIcon: "/images/profileActiveIcon.png", inactiveIcon: "/images/profileNotActiveIcon.png" },
+  { path: "/dashboard",         label: "Play",    icon: Gamepad2 },
+  { path: "/dashboard/wallet",  label: "Wallet",  icon: Wallet },
+  { path: "/dashboard/help",    label: "Help",    icon: HelpCircle },
+  { path: "/dashboard/profile", label: "Profile", icon: User },
 ];
 
 export const SideNav = () => {
@@ -44,6 +46,7 @@ export const SideNav = () => {
       <nav style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
         {tabs.map((tab) => {
           const isActive = pathname === tab.path;
+          const Icon = tab.icon;
           return (
             <Link
               key={tab.path}
@@ -76,12 +79,13 @@ export const SideNav = () => {
                 }
               }}
             >
-              <Image
-                src={isActive ? tab.activeIcon : tab.inactiveIcon}
-                alt={tab.label}
-                width={20}
-                height={20}
-                style={{ objectFit: "contain", opacity: isActive ? 1 : 0.5 }}
+              <Icon
+                size={20}
+                style={{
+                  opacity: isActive ? 1 : 0.5,
+                  filter: isActive ? "drop-shadow(0 0 6px var(--green-glow))" : "none",
+                  transition: "all 0.3s ease",
+                }}
               />
               {tab.label}
             </Link>

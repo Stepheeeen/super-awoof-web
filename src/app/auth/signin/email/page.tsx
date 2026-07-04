@@ -20,11 +20,17 @@ function SignInEmailForm() {
       showToast("Please fill in all fields.", "error");
       return;
     }
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!isEmailValid) {
+      showToast("Please enter a valid email address.", "error");
+      return;
+    }
     try {
       setLoading(true);
-      const response = await axios.post(`${baseUrl}/account/login`, { email, password });
+      const response = await axios.post(`${baseUrl}/account/login`, { email: email.trim(), password });
       setUser(response.data.account);
       setTokens(response.data.accessToken, response.data.refreshToken);
+      localStorage.setItem("loginTimestamp", Date.now().toString());
       showToast("Welcome back!", "success");
       setTimeout(() => router.push("/dashboard"), 1000);
     } catch (error: any) {

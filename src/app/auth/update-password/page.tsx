@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
@@ -17,6 +17,15 @@ function UpdatePasswordForm() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isResetFlow, setIsResetFlow] = useState(false);
+
+  useEffect(() => {
+    const otp = localStorage.getItem("passwordResetOtp");
+    if (otp) {
+      setOldPassword(otp);
+      setIsResetFlow(true);
+    }
+  }, []);
 
   const handleUpdate = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
@@ -36,6 +45,8 @@ function UpdatePasswordForm() {
         new_password: newPassword,
       });
       if (response.status === 200) {
+        localStorage.removeItem("passwordResetOtp");
+        localStorage.removeItem("passwordEmailReset");
         showToast("Password updated successfully!", "success");
         setTimeout(() => router.push("/auth/signin"), 1200);
       }
@@ -60,12 +71,14 @@ function UpdatePasswordForm() {
       </div>
 
       <div className="flex flex-col gap-5">
-        <PasswordInput
-          label="Old Password"
-          placeholder="Old Password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-        />
+        {!isResetFlow && (
+          <PasswordInput
+            label="Old Password"
+            placeholder="Old Password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+        )}
         <PasswordInput
           label="New Password"
           placeholder="New Password"

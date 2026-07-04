@@ -32,6 +32,16 @@ function OTPForm() {
     if (e.key === "Backspace" && !otp[idx] && idx > 0) refs[idx - 1].current?.focus();
   };
 
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData("text").trim();
+    if (/^\d{4}$/.test(text)) {
+      const digits = text.split("");
+      setOtp(digits);
+      refs[3].current?.focus();
+    }
+  };
+
   const handleVerify = async () => {
     if (otp.some((d) => d === "")) {
       showToast("Please fill in all 4 digits.", "error");
@@ -41,13 +51,27 @@ function OTPForm() {
       setLoading(true);
       const storedEndpoint = localStorage.getItem("verifyEndpoint") || "/account/verify-otp";
       const isNewAccount = localStorage.getItem("isNewAccount") === "true";
-      const response = await axios.post(`${baseUrl}${storedEndpoint}`, { otp: otp.join("") });
+      const phone = localStorage.getItem("pendingPhone");
+      const email = localStorage.getItem("pendingEmail");
+      const emailOrPhone = phone || email;
+
+      if (!emailOrPhone) {
+        showToast("Session expired. Please sign in again.", "error");
+        router.push("/auth/signin");
+        return;
+      }
+
+      const response = await axios.post(`${baseUrl}${storedEndpoint}`, { 
+        otp: otp.join(""), 
+        emailOrPhone 
+      });
 
       if (response.status === 200) {
         const { accessToken, refreshToken, account } = response.data;
         if (accessToken) {
           setTokens(accessToken, refreshToken);
           setUser(account);
+          localStorage.setItem("loginTimestamp", Date.now().toString());
           showToast(isNewAccount ? "Account created successfully!" : "Logged in successfully!", "success");
           setTimeout(() => router.push("/dashboard"), 1200);
         } else {
@@ -174,6 +198,7 @@ function OTPForm() {
                 autoComplete="one-time-code"
                 onChange={(e) => handleChange(e.target.value, i)}
                 onKeyDown={(e) => handleKeyDown(e, i)}
+                onPaste={handlePaste}
                 style={{
                   width: 64,
                   height: 72,

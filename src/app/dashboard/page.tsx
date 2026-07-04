@@ -26,22 +26,31 @@ function Dashboard() {
   const handleSpin = async () => {
     if (!user || user.coins <= 0) {
       setDepositModal(true);
-      return;
+      return null;
     }
-    const newBalance = user.coins - 1;
-    const updatedUser = { ...user, coins: newBalance };
-    setUserState(updatedUser);
-    setUser(updatedUser);
     try {
       const token = getAccessToken();
-      await axios.post(
-        `${baseUrl}/account/update-coins/${newBalance}`,
+      const response = await axios.post(
+        `${baseUrl}/system/spin`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-    } catch (err) {
-      console.error("Failed to sync coins:", err);
-      showToast("Failed to sync balance with server.", "error");
+
+      const { isWin, reels, amount, coinsLeft } = response.data;
+      
+      const updatedUser = { ...user, coins: coinsLeft };
+      setUserState(updatedUser);
+      setUser(updatedUser);
+
+      if (isWin) {
+        showToast(`You won ₦${amount.toLocaleString()}!`, "success");
+      }
+
+      return { isWin, reels, amount };
+    } catch (err: any) {
+      console.error("Failed to spin:", err);
+      showToast(err.response?.data?.message || "Failed to process spin. Try again.", "error");
+      return null;
     }
   };
 
@@ -108,8 +117,8 @@ function Dashboard() {
 
       {/* Stats Row */}
       <div
+        className="hidden md:grid"
         style={{
-          display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: 10,
           padding: "0 20px",
@@ -140,14 +149,14 @@ function Dashboard() {
         confirmText="Deposit Coins"
         cancelText="Wallet"
         onConfirm={() => { setDepositModal(false); router.push("/dashboard/deposit"); }}
+        onCancel={() => { setDepositModal(false); router.push("/dashboard/wallet"); }}
       >
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: "24px 0" }}>
-          <Image src="/images/AwoofCoin.png" alt="Coins" width={72} height={72} />
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "48px 0 32px 0" }}>
           <div style={{ textAlign: "center" }}>
-            <p style={{ fontSize: 12, color: "var(--muted)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
+            <p style={{ fontSize: 13, color: "var(--muted)", fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
               Available Coins
             </p>
-            <p className="font-display" style={{ fontSize: 56, color: "white" }}>
+            <p className="font-display" style={{ fontSize: 64, color: "white", lineHeight: 1 }}>
               {user?.coins ?? 0}
             </p>
           </div>

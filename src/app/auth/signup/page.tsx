@@ -21,11 +21,24 @@ function SignUpPhoneForm() {
       showToast("Please fill in all fields.", "error");
       return;
     }
+    if (fullName.trim().length < 3) {
+      showToast("Please enter a valid full name.", "error");
+      return;
+    }
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (!cleanPhone || cleanPhone.length < 10 || cleanPhone.length > 11) {
+      showToast("Please enter a valid 10 or 11-digit phone number.", "error");
+      return;
+    }
+    if (password.length < 8) {
+      showToast("Password must be at least 8 characters long.", "error");
+      return;
+    }
     try {
       setLoading(true);
       const response = await axios.post(`${baseUrl}/account/register`, {
-        fullname: fullName,
-        phone,
+        fullname: fullName.trim(),
+        phone: cleanPhone,
         password,
       });
       showToast(response.data.msg || "Account created!", "success");

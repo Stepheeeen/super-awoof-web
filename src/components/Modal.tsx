@@ -11,6 +11,7 @@ interface ModalProps {
   confirmText: string;
   cancelText?: string;
   onConfirm: () => void;
+  onCancel?: () => void;
   confirmVariant?: "primary" | "danger";
   children?: React.ReactNode;
 }
@@ -23,6 +24,7 @@ export const Modal = ({
   confirmText,
   cancelText = "No, Cancel",
   onConfirm,
+  onCancel,
   confirmVariant = "primary",
   children,
 }: ModalProps) => {
@@ -45,13 +47,23 @@ export const Modal = ({
           <p className="text-[#A8A8A8] text-[15px] mb-4 leading-relaxed">{subtitle}</p>
         )}
         {children}
-        <Button text={confirmText} onClick={onConfirm} variant={confirmVariant} className="mt-4" />
-        <button
-          onClick={onClose}
-          className="w-full text-center text-white underline mt-3 text-[15px] py-1"
-        >
-          {cancelText}
-        </button>
+        <div className="flex flex-col gap-4 mt-8">
+          <Button 
+            text={confirmText} 
+            onClick={onConfirm} 
+            variant={confirmVariant} 
+            style={{ height: 56, borderRadius: 16, fontSize: 16, fontWeight: 800 }}
+          />
+          {cancelText && (
+            <button
+              onClick={onCancel || onClose}
+              className="w-full text-center bg-[#151922] hover:bg-[#1C212E] text-white border border-white/10 transition-all font-bold tracking-wide"
+              style={{ height: 56, borderRadius: 16, fontSize: 16 }}
+            >
+              {cancelText}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

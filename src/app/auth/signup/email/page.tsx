@@ -22,6 +22,19 @@ function SignUpEmailForm() {
       showToast("Please fill in all fields.", "error");
       return;
     }
+    if (fullName.trim().length < 3) {
+      showToast("Please enter a valid full name.", "error");
+      return;
+    }
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!isEmailValid) {
+      showToast("Please enter a valid email address.", "error");
+      return;
+    }
+    if (password.length < 8) {
+      showToast("Password must be at least 8 characters long.", "error");
+      return;
+    }
     if (password !== confirmPassword) {
       showToast("Passwords do not match!", "error");
       return;
@@ -29,8 +42,8 @@ function SignUpEmailForm() {
     try {
       setLoading(true);
       const response = await axios.post(`${baseUrl}/account/register`, {
-        fullname: fullName,
-        email,
+        fullname: fullName.trim(),
+        email: email.trim(),
         password,
       });
       showToast(response.data.msg || "Account created!", "success");

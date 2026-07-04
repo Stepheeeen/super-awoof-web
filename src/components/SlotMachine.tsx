@@ -18,7 +18,7 @@ const rnd = () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
 interface SlotMachineProps {
   coins: number;
   onNoCoins: () => void;
-  onSpin: () => void;
+  onSpin: () => Promise<{ isWin: boolean; reels: string[][]; amount: number } | null>;
 }
 
 export const SlotMachine = ({ coins, onNoCoins, onSpin }: SlotMachineProps) => {
@@ -29,32 +29,120 @@ export const SlotMachine = ({ coins, onNoCoins, onSpin }: SlotMachineProps) => {
   const [result, setResult] = useState<"win" | "lose" | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const activeReelsRef = useRef<boolean[]>([false, false, false]);
+  const [activeReels, setActiveReelsState] = useState<boolean[]>([false, false, false]);
+
+  const setActiveReels = (newVal: boolean[]) => {
+    activeReelsRef.current = newVal;
+    setActiveReelsState(newVal);
+  };
+
   useEffect(() => {
     audioRef.current = new Audio("/audio/winning_slot.wav");
   }, []);
+
+  const playSynthSound = (type: "spin" | "stop") => {
+    if (typeof window === "undefined") return null;
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContext) return null;
+    try {
+      const ctx = new AudioContext();
+      if (type === "stop") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(160, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+      } else if (type === "spin") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(55, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.value = 14;
+        lfoGain.gain.value = 25;
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        lfo.start();
+        
+        return {
+          stop: () => {
+            try {
+              osc.stop();
+              lfo.stop();
+              ctx.close();
+            } catch {}
+          }
+        };
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+  };
 
   const spin = async () => {
     if (coins <= 0) { onNoCoins(); return; }
     if (spinning) return;
     setSpinning(true);
     setResult(null);
-    onSpin();
+
+    setActiveReels([true, true, true]);
+    const spinSoundInstance = playSynthSound("spin");
 
     const interval = setInterval(() => {
-      setReels(Array.from({ length: REEL_COUNT }, () => [rnd(), rnd(), rnd()]));
-    }, 70);
+      setReels((prev) =>
+        prev.map((reel, idx) => (activeReelsRef.current[idx] ? [rnd(), rnd(), rnd()] : reel))
+      );
+    }, 80);
 
-    setTimeout(() => {
+    try {
+      const res = await onSpin();
+      if (!res || !res.reels) throw new Error("Invalid spin result");
+
+      // Reel 1 stops
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      setActiveReels([false, true, true]);
+      playSynthSound("stop");
+      setReels((prev) => [res.reels[0], prev[1], prev[2]]);
+
+      // Reel 2 stops
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      setActiveReels([false, false, true]);
+      playSynthSound("stop");
+      setReels((prev) => [prev[0], res.reels[1], prev[2]]);
+
+      // Reel 3 stops
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      setActiveReels([false, false, false]);
       clearInterval(interval);
-      const finalReels = Array.from({ length: REEL_COUNT }, () => [rnd(), rnd(), rnd()]);
-      setReels(finalReels);
-      const middleRow = finalReels.map((r) => r[1]);
-      const isWin = middleRow.every((s) => s === middleRow[0]);
-      setResult(isWin ? "win" : "lose");
-      if (isWin && audioRef.current) audioRef.current.play().catch(() => {});
+      spinSoundInstance?.stop();
+      playSynthSound("stop");
+      setReels((prev) => [prev[0], prev[1], res.reels[2]]);
+
+      setResult(res.isWin ? "win" : "lose");
+      if (res.isWin && audioRef.current) audioRef.current.play().catch(() => {});
       setTimeout(() => setResult(null), 3000);
+    } catch (err) {
+      clearInterval(interval);
+      spinSoundInstance?.stop();
+      setActiveReels([false, false, false]);
+      setResult("lose");
+    } finally {
       setSpinning(false);
-    }, 1800);
+    }
   };
 
   return (
@@ -140,6 +228,7 @@ export const SlotMachine = ({ coins, onNoCoins, onSpin }: SlotMachineProps) => {
             {reels.map((reel, i) => (
               <div
                 key={i}
+                className={activeReels[i] ? "reel-spinning" : ""}
                 style={{
                   flex: 1,
                   display: "flex",
