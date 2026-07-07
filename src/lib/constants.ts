@@ -1,5 +1,5 @@
 // Base URL for API calls
-export const baseUrl = "http://localhost:8088/api/v1";
+export const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.superawoof.ng/api/v1";
 
 // Token helpers (localStorage for web)
 export const getAccessToken = (): string | null => {
