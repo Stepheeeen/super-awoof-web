@@ -42,7 +42,7 @@ function SignUpPhoneForm() {
         password,
       });
       showToast(response.data.msg || "Account created!", "success");
-      localStorage.setItem("pendingPhone", phone);
+      localStorage.setItem("pendingPhone", cleanPhone);
       localStorage.removeItem("pendingEmail");
       localStorage.setItem("verifyEndpoint", "/account/verify");
       localStorage.setItem("isNewAccount", "true");

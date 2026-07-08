@@ -28,7 +28,7 @@ function SignInPhoneForm() {
       const { isNewAccount, verifyEndpoint } = response.data;
       
       // Store these for the OTP verification step
-      localStorage.setItem("pendingPhone", phone);
+      localStorage.setItem("pendingPhone", cleanPhone);
       localStorage.removeItem("pendingEmail");
       localStorage.setItem("isNewAccount", String(isNewAccount));
       localStorage.setItem("verifyEndpoint", verifyEndpoint);
