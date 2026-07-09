@@ -6,7 +6,7 @@ import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 import { ToastProvider, useToast } from "@/context/ToastContext";
 import { baseUrl, getAccessToken, getUser } from "@/lib/constants";
-import { ArrowDownUp, X, ChevronLeft, Smartphone, Copy, Check, Send, Sparkles } from "lucide-react";
+import { ArrowDownUp, X, ChevronLeft } from "lucide-react";
 
 const PACKAGES = [
   { id: "starter", name: "Starter Pack", coins: 10, price: 250, badge: null },
@@ -17,24 +17,15 @@ const PACKAGES = [
 
 const CoinStackIcon = ({ size = 48, active = false }: { size?: number; active?: boolean }) => {
   const strokeColor = active ? "#1DB954" : "rgba(255, 255, 255, 0.35)";
-  const fillOpacity = active ? "0.2" : "0.1";
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transition: "all 0.3s ease" }}>
-      {/* Back/bottom coin */}
       <ellipse cx="24" cy="34" rx="16" ry="6" fill={`url(#coinStackGrad-${active})`} stroke={strokeColor} strokeWidth="1.5" />
       <path d="M8 34V38C8 41.3 15.2 44 24 44C32.8 44 40 41.3 40 38V34" stroke={strokeColor} strokeWidth="1.5" strokeLinecap="round" />
-      
-      {/* Middle coin */}
       <ellipse cx="24" cy="26" rx="16" ry="6" fill={`url(#coinStackGrad-${active})`} stroke={strokeColor} strokeWidth="1.5" />
       <path d="M8 26V30C8 33.3 15.2 36 24 36C32.8 36 40 33.3 40 30V26" stroke={strokeColor} strokeWidth="1.5" strokeLinecap="round" />
-      
-      {/* Top coin */}
       <ellipse cx="24" cy="18" rx="16" ry="6" fill={`url(#coinStackGrad-${active})`} stroke={strokeColor} strokeWidth="1.5" />
       <path d="M8 18V22C8 25.3 15.2 28 24 28C32.8 28 40 25.3 40 22V18" stroke={strokeColor} strokeWidth="1.5" strokeLinecap="round" />
-      
-      {/* Shiny top coin surface detail */}
       <circle cx="24" cy="18" r="8" stroke={active ? "rgba(29, 185, 84, 0.6)" : "rgba(255, 255, 255, 0.2)"} strokeWidth="1" />
-      
       <defs>
         <linearGradient id={`coinStackGrad-${active}`} x1="8" y1="12" x2="40" y2="44" gradientUnits="userSpaceOnUse">
           <stop stopColor={active ? "#1DB954" : "#242936"} />
@@ -59,8 +50,8 @@ function DepositForm() {
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     setCopiedText(text);
-    showToast(`${label} copied to clipboard!`, "success");
-    setTimeout(() => setCopiedText(null), 2000);
+    showToast(`${label} copied!`, "success");
+    setTimeout(() => setCopiedText(null), 2500);
   };
 
   useEffect(() => {
@@ -88,10 +79,7 @@ function DepositForm() {
 
   const handlePay = async () => {
     const token = getAccessToken();
-    if (!token) {
-      router.push("/auth/signin");
-      return;
-    }
+    if (!token) { router.push("/auth/signin"); return; }
     try {
       setLoading(true);
       const response = await axios.post(
@@ -101,7 +89,7 @@ function DepositForm() {
       );
       setPaymentUrl(response.data.authorization_url);
       setReference(response.data.reference);
-    } catch (error: any) {
+    } catch {
       showToast("Payment initiation failed.", "error");
     } finally {
       setLoading(false);
@@ -130,291 +118,396 @@ function DepositForm() {
     );
   }
 
+  const isSubscriber = user?.loginMode === "phone" || user?.phone;
+
   return (
-    <div className="page-container min-h-screen bg-[#0F1219] animate-fade-in" style={{ padding: "64px 28px 160px 28px" }}>
-      <div style={{ maxWidth: 850, margin: "0 auto", width: "100%" }}>
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 48 }}>
-          <button 
-            onClick={() => router.back()} 
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
+    <div
+      className="page-container min-h-screen bg-[#0F1219] animate-fade-in"
+      style={{ padding: "48px 24px 120px 24px" }}
+    >
+      <div style={{ maxWidth: isSubscriber ? 680 : 860, margin: "0 auto", width: "100%" }}>
+
+        {/* Back + Page title */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 40 }}>
+          <button
+            onClick={() => router.back()}
+            className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/8 transition-all cursor-pointer flex-shrink-0"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
-          <h1 className="text-white font-bold text-3xl font-display tracking-wide">Deposit Coins</h1>
+          <h1 className="text-white font-bold text-2xl font-display">Deposit Coins</h1>
         </div>
 
-        {user?.loginMode === "phone" || user?.phone ? (
-          <div className="animate-fade-in w-full max-w-xl mx-auto flex flex-col gap-10">
+        {isSubscriber ? (
+          /* ═══════════════════════════════════════════════════
+             SUBSCRIBER LAYOUT — MTN Billing Instructions
+          ═══════════════════════════════════════════════════ */
+          <div className="flex flex-col" style={{ gap: 40 }}>
 
-            {/* Intro */}
-            <div>
-              <h2 className="text-white text-2xl font-bold mb-3">How to top up your coins</h2>
-              <p className="text-white/50 text-sm leading-relaxed">
-                You are on an MTN line. There are two ways to add coins — via <strong className="text-white/75">USSD</strong> or <strong className="text-white/75">SMS</strong>. Pick whichever is easier for you.
+            {/* ── Intro ── */}
+            <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: 28 }}>
+              <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 8 }}>
+                MTN Subscribers
+              </p>
+              <h2 style={{ color: "white", fontSize: 22, fontWeight: 700, marginBottom: 10 }}>
+                How to top up your coins
+              </h2>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.8, maxWidth: 520 }}>
+                Your account is linked to an MTN line. Add coins to your wallet using either of the two methods below — USSD or SMS.
               </p>
             </div>
-            {/* Step 1: USSD */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <span className="w-7 h-7 rounded-full bg-yellow-400 text-black text-xs font-black flex items-center justify-center flex-shrink-0">1</span>
-                <h3 className="text-white font-bold text-base">Dial the USSD code</h3>
+
+            {/* ── Method 1: USSD ── */}
+            <div className="flex flex-col" style={{ gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{
+                  width: 26, height: 26, borderRadius: "50%",
+                  background: "#FACC15", color: "#000",
+                  fontSize: 11, fontWeight: 900,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0,
+                }}>1</span>
+                <h3 style={{ color: "white", fontSize: 16, fontWeight: 700 }}>Dial via USSD</h3>
               </div>
-              <div className="border border-white/10 rounded-2xl overflow-hidden">
-                <div className="p-5">
-                  <p className="text-white/40 text-xs mb-4 uppercase tracking-widest font-semibold">General code (works for all plans)</p>
-                  <div className="flex items-center justify-between gap-4 flex-wrap">
+
+              <div style={{ border: "1px solid rgba(255,255,255,0.1)", borderRadius: 16, overflow: "hidden" }}>
+                {/* Main code block */}
+                <div style={{ padding: "24px 24px 20px" }}>
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 16 }}>
+                    General USSD code — works for all plans
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
                     <a
                       href="tel:*920*20138#"
-                      className="text-yellow-400 text-2xl font-black font-mono tracking-widest hover:text-yellow-300 transition-colors"
+                      style={{
+                        color: "#FACC15",
+                        fontFamily: "monospace",
+                        fontWeight: 900,
+                        letterSpacing: "0.06em",
+                        fontSize: "clamp(1.5rem, 5vw, 2.25rem)",
+                        lineHeight: 1,
+                        textDecoration: "none",
+                        transition: "color 0.2s",
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.color = "#FDE047")}
+                      onMouseLeave={e => (e.currentTarget.style.color = "#FACC15")}
                     >
                       *920*20138#
                     </a>
                     <button
                       onClick={() => handleCopy("*920*20138#", "USSD code")}
-                      className="text-xs font-semibold text-white/60 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap"
+                      style={{
+                        padding: "10px 20px",
+                        borderRadius: 10,
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        background: "rgba(255,255,255,0.04)",
+                        color: copiedText === "*920*20138#" ? "#4ade80" : "rgba(255,255,255,0.65)",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
+                      }}
                     >
-                      {copiedText === "*920*20138#" ? "✓ Copied" : "Copy"}
+                      {copiedText === "*920*20138#" ? "✓ Copied!" : "Copy code"}
                     </button>
                   </div>
                 </div>
-                <div className="border-t border-white/[0.06] px-5 py-3 bg-white/[0.02]">
-                  <p className="text-white/30 text-xs">On mobile, tap the code to open your phone dialer automatically.</p>
+                {/* Footer hint */}
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "10px 24px", background: "rgba(255,255,255,0.015)" }}>
+                  <p style={{ color: "rgba(255,255,255,0.28)", fontSize: 12 }}>
+                    On a mobile device, tap the code above to open your dialer automatically.
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Divider */}
-            <div className="flex items-center gap-4">
-              <div className="flex-1 h-px bg-white/8" />
-              <span className="text-white/30 text-xs font-semibold uppercase tracking-widest">or</span>
-              <div className="flex-1 h-px bg-white/8" />
+            {/* ── OR divider ── */}
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
+              <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em" }}>or</span>
+              <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.07)" }} />
             </div>
 
-            {/* Step 2: SMS Plans */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <span className="w-7 h-7 rounded-full bg-yellow-400 text-black text-xs font-black flex items-center justify-center flex-shrink-0">2</span>
-                <h3 className="text-white font-bold text-base">Send an SMS to <span className="text-yellow-400 font-mono">20138</span></h3>
+            {/* ── Method 2: SMS ── */}
+            <div className="flex flex-col" style={{ gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{
+                  width: 26, height: 26, borderRadius: "50%",
+                  background: "#FACC15", color: "#000",
+                  fontSize: 11, fontWeight: 900,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexShrink: 0,
+                }}>2</span>
+                <h3 style={{ color: "white", fontSize: 16, fontWeight: 700 }}>
+                  Send an SMS to{" "}
+                  <span style={{ color: "#FACC15", fontFamily: "monospace" }}>20138</span>
+                </h3>
               </div>
-              <p className="text-white/50 text-sm leading-relaxed pl-10">
-                Choose a plan below, then tap <strong className="text-white/75">"Send SMS"</strong> — your phone will open with the message pre-filled. Coins are credited once confirmed.
+
+              <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, lineHeight: 1.8, paddingLeft: 36 }}>
+                Choose a plan below. Tap <strong style={{ color: "rgba(255,255,255,0.75)", fontWeight: 600 }}>Send SMS</strong> to open a pre-filled message, or copy the keyword and send it manually.
               </p>
 
-              {/* Plan Table */}
-              <div className="border border-white/10 rounded-2xl overflow-hidden">
-                {/* Table header */}
-                <div className="hidden sm:grid grid-cols-3 px-5 py-3 border-b border-white/[0.07] bg-white/[0.02]">
-                  <span className="text-white/35 text-xs font-bold uppercase tracking-wider">Plan</span>
-                  <span className="text-white/35 text-xs font-bold uppercase tracking-wider text-center">SMS Keyword</span>
-                  <span className="text-white/35 text-xs font-bold uppercase tracking-wider text-right">Action</span>
-                </div>
+              {/* Plans */}
+              <div className="flex flex-col" style={{ gap: 12 }}>
 
                 {/* Daily */}
-                <div className="flex flex-col sm:grid sm:grid-cols-3 sm:items-center px-5 py-5 border-b border-white/[0.05] gap-3 sm:gap-0 hover:bg-white/[0.02] transition-colors">
-                  <div>
-                    <p className="text-white font-semibold text-sm">Daily</p>
-                    <p className="text-white/40 text-xs mt-0.5">5 coins · ₦100/day</p>
-                  </div>
-                  <div className="sm:flex sm:justify-center">
-                    <span className="font-mono font-black text-yellow-400 text-lg tracking-widest">SA1</span>
-                  </div>
-                  <div className="flex gap-2 sm:justify-end flex-wrap">
-                    <a href="sms:20138?body=SA1" className="flex-1 sm:flex-none text-center text-xs font-semibold text-white/70 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all whitespace-nowrap">
-                      Send SMS
-                    </a>
-                    <button onClick={() => handleCopy("SA1", "SA1")} className="flex-1 sm:flex-none text-center text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap">
-                      {copiedText === "SA1" ? "✓ Copied" : "Copy"}
-                    </button>
+                <div style={{ border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 16, padding: "20px 24px", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <p style={{ color: "white", fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Daily Plan</p>
+                      <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>5 coins &nbsp;&middot;&nbsp; ₦100 / day</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ textAlign: "center" }}>
+                        <p style={{ color: "rgba(255,255,255,0.28)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Keyword</p>
+                        <span style={{ color: "#FACC15", fontFamily: "monospace", fontWeight: 900, fontSize: 18, letterSpacing: "0.06em" }}>SA1</span>
+                      </div>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <a
+                          href="sms:20138?body=SA1"
+                          style={{
+                            padding: "9px 18px", borderRadius: 10,
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            background: "rgba(255,255,255,0.04)",
+                            color: "rgba(255,255,255,0.65)", fontSize: 13, fontWeight: 600,
+                            textDecoration: "none", whiteSpace: "nowrap",
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          Send SMS
+                        </a>
+                        <button
+                          onClick={() => handleCopy("SA1", "SA1")}
+                          style={{
+                            padding: "9px 18px", borderRadius: 10,
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            background: "rgba(255,255,255,0.04)",
+                            color: copiedText === "SA1" ? "#4ade80" : "rgba(255,255,255,0.5)",
+                            fontSize: 13, fontWeight: 600, cursor: "pointer",
+                            transition: "all 0.2s", whiteSpace: "nowrap",
+                          }}
+                        >
+                          {copiedText === "SA1" ? "✓ Copied" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Weekly */}
-                <div className="flex flex-col sm:grid sm:grid-cols-3 sm:items-center px-5 py-5 border-b border-white/[0.05] gap-3 sm:gap-0 hover:bg-white/[0.02] transition-colors">
-                  <div>
-                    <p className="text-white font-semibold text-sm">Weekly</p>
-                    <p className="text-white/40 text-xs mt-0.5">20 coins · ₦200/week</p>
-                  </div>
-                  <div className="sm:flex sm:justify-center">
-                    <span className="font-mono font-black text-yellow-400 text-lg tracking-widest">SA7</span>
-                  </div>
-                  <div className="flex gap-2 sm:justify-end flex-wrap">
-                    <a href="sms:20138?body=SA7" className="flex-1 sm:flex-none text-center text-xs font-semibold text-white/70 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all whitespace-nowrap">
-                      Send SMS
-                    </a>
-                    <button onClick={() => handleCopy("SA7", "SA7")} className="flex-1 sm:flex-none text-center text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap">
-                      {copiedText === "SA7" ? "✓ Copied" : "Copy"}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Monthly */}
-                <div className="flex flex-col sm:grid sm:grid-cols-3 sm:items-center px-5 py-5 gap-3 sm:gap-0 bg-yellow-400/[0.03] hover:bg-yellow-400/[0.05] transition-colors">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-white font-semibold text-sm">Monthly</p>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-yellow-400 border border-yellow-400/30 px-1.5 py-0.5 rounded">Best</span>
+                <div style={{ border: "1px solid rgba(255,255,255,0.09)", borderRadius: 16, overflow: "hidden" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 16, padding: "20px 24px", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <p style={{ color: "white", fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Weekly Plan</p>
+                      <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>20 coins &nbsp;&middot;&nbsp; ₦200 / week</p>
                     </div>
-                    <p className="text-white/40 text-xs mt-0.5">50 coins · ₦500/month</p>
-                  </div>
-                  <div className="sm:flex sm:justify-center">
-                    <span className="font-mono font-black text-yellow-400 text-lg tracking-widest">SA30</span>
-                  </div>
-                  <div className="flex gap-2 sm:justify-end flex-wrap">
-                    <a href="sms:20138?body=SA30" className="flex-1 sm:flex-none text-center text-xs font-semibold text-white/70 hover:text-white border border-white/10 hover:border-white/20 px-4 py-2 rounded-lg transition-all whitespace-nowrap">
-                      Send SMS
-                    </a>
-                    <button onClick={() => handleCopy("SA30", "SA30")} className="flex-1 sm:flex-none text-center text-xs font-black bg-yellow-400 text-black hover:bg-yellow-300 px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap">
-                      {copiedText === "SA30" ? "✓ Copied" : "Copy"}
-                    </button>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ textAlign: "center" }}>
+                        <p style={{ color: "rgba(255,255,255,0.28)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Keyword</p>
+                        <span style={{ color: "#FACC15", fontFamily: "monospace", fontWeight: 900, fontSize: 18, letterSpacing: "0.06em" }}>SA7</span>
+                      </div>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <a
+                          href="sms:20138?body=SA7"
+                          style={{
+                            padding: "9px 18px", borderRadius: 10,
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            background: "rgba(255,255,255,0.04)",
+                            color: "rgba(255,255,255,0.65)", fontSize: 13, fontWeight: 600,
+                            textDecoration: "none", whiteSpace: "nowrap",
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          Send SMS
+                        </a>
+                        <button
+                          onClick={() => handleCopy("SA7", "SA7")}
+                          style={{
+                            padding: "9px 18px", borderRadius: 10,
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            background: "rgba(255,255,255,0.04)",
+                            color: copiedText === "SA7" ? "#4ade80" : "rgba(255,255,255,0.5)",
+                            fontSize: 13, fontWeight: 600, cursor: "pointer",
+                            transition: "all 0.2s", whiteSpace: "nowrap",
+                          }}
+                        >
+                          {copiedText === "SA7" ? "✓ Copied" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="px-5 py-4 border-t border-white/[0.06] bg-white/[0.015]">
-                  <p className="text-white/30 text-xs leading-relaxed">Coins are credited automatically once MTN confirms your payment. This usually takes under 5 minutes.</p>
+                {/* Monthly — highlighted */}
+                <div style={{ border: "1px solid rgba(250,204,21,0.2)", borderRadius: 16, overflow: "hidden", background: "rgba(250,204,21,0.025)", position: "relative" }}>
+                  <div style={{ position: "absolute", top: 0, right: 0, background: "#FACC15", color: "#000", fontSize: 9, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.12em", padding: "4px 12px", borderBottomLeftRadius: 10 }}>
+                    Best Value
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 16, padding: "20px 24px", paddingTop: 28, alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <p style={{ color: "white", fontSize: 15, fontWeight: 700, marginBottom: 4 }}>Monthly Plan</p>
+                      <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13 }}>50 coins &nbsp;&middot;&nbsp; ₦500 / month</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ textAlign: "center" }}>
+                        <p style={{ color: "rgba(255,255,255,0.28)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 2 }}>Keyword</p>
+                        <span style={{ color: "#FACC15", fontFamily: "monospace", fontWeight: 900, fontSize: 18, letterSpacing: "0.06em" }}>SA30</span>
+                      </div>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <a
+                          href="sms:20138?body=SA30"
+                          style={{
+                            padding: "9px 18px", borderRadius: 10,
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            background: "rgba(255,255,255,0.04)",
+                            color: "rgba(255,255,255,0.65)", fontSize: 13, fontWeight: 600,
+                            textDecoration: "none", whiteSpace: "nowrap",
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          Send SMS
+                        </a>
+                        <button
+                          onClick={() => handleCopy("SA30", "SA30")}
+                          style={{
+                            padding: "9px 18px", borderRadius: 10,
+                            border: "none",
+                            background: "#FACC15",
+                            color: "#000",
+                            fontSize: 13, fontWeight: 800, cursor: "pointer",
+                            transition: "all 0.2s", whiteSpace: "nowrap",
+                          }}
+                        >
+                          {copiedText === "SA30" ? "✓ Copied" : "Copy SA30"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
               </div>
+
+              {/* Confirmation note */}
+              <p style={{ color: "rgba(255,255,255,0.28)", fontSize: 12, lineHeight: 1.8, paddingTop: 4 }}>
+                Coins are credited automatically once MTN confirms your billing. This usually takes under 5 minutes.
+              </p>
             </div>
 
-            <button
-              onClick={() => router.push("/dashboard/wallet")}
-              className="text-sm text-white/35 hover:text-white/60 transition-colors py-2 cursor-pointer text-left"
-            >
-              ← Back to Wallet
-            </button>
+            {/* Back link */}
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 20 }}>
+              <button
+                onClick={() => router.push("/dashboard/wallet")}
+                style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, fontWeight: 500, background: "none", border: "none", cursor: "pointer", transition: "color 0.2s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+              >
+                &#8592; Back to Wallet
+              </button>
+            </div>
+
           </div>
+
         ) : (
           <>
+            {/* ═══════════════════════════════════════════════════
+               EMAIL-USER LAYOUT — Paystack Card Packages
+            ═══════════════════════════════════════════════════ */}
+
             {/* Package Grid */}
-        <div style={{ marginBottom: 48 }}>
-          <h2 className="text-white/60 text-xs font-bold tracking-wider uppercase mb-6 px-1">Select Coin Package</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {PACKAGES.map((pkg) => {
-              const isSelected = Number(coin) === pkg.coins;
-              return (
-                <div
-                  key={pkg.id}
-                  onClick={() => selectPackage(pkg.coins)}
-                  className={`relative flex flex-col items-center justify-between rounded-3xl p-6 border transition-all duration-300 select-none cursor-pointer ${
-                    isSelected 
-                      ? "bg-[#1DB954]/10 border-[#1DB954] shadow-[0_0_30px_rgba(29,185,84,0.25)] scale-[1.03]" 
-                      : "bg-[#151922] border-white/10 hover:border-white/20 hover:bg-[#1C212E] hover:scale-[1.02]"
-                  }`}
-                  style={{ minHeight: 200 }}
-                >
-                  {pkg.badge && (
-                    <div 
-                      className={`absolute top-3 right-3 rounded-full text-[10px] font-black tracking-wider uppercase shadow-md flex items-center justify-center ${
-                        pkg.badge === "Popular" 
-                          ? "bg-amber-500 text-black shadow-amber-500/20" 
-                          : "bg-cyan-500 text-black shadow-cyan-500/20"
+            <div style={{ marginBottom: 48 }}>
+              <h2 className="text-white/60 text-xs font-bold tracking-wider uppercase mb-6 px-1">Select Coin Package</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {PACKAGES.map((pkg) => {
+                  const isSelected = Number(coin) === pkg.coins;
+                  return (
+                    <div
+                      key={pkg.id}
+                      onClick={() => selectPackage(pkg.coins)}
+                      className={`relative flex flex-col items-center justify-between rounded-3xl p-6 border transition-all duration-300 select-none cursor-pointer ${
+                        isSelected
+                          ? "bg-[#1DB954]/10 border-[#1DB954] shadow-[0_0_30px_rgba(29,185,84,0.25)] scale-[1.03]"
+                          : "bg-[#151922] border-white/10 hover:border-white/20 hover:bg-[#1C212E] hover:scale-[1.02]"
                       }`}
-                      style={{
-                        fontFamily: "'DM Sans', 'Inter', sans-serif",
-                        padding: "4px 12px",
-                        whiteSpace: "nowrap"
-                      }}
+                      style={{ minHeight: 200 }}
                     >
-                      {pkg.badge}
+                      {pkg.badge && (
+                        <div
+                          className={`absolute top-3 right-3 rounded-full text-[10px] font-black tracking-wider uppercase shadow-md flex items-center justify-center ${
+                            pkg.badge === "Popular"
+                              ? "bg-amber-500 text-black shadow-amber-500/20"
+                              : "bg-cyan-500 text-black shadow-cyan-500/20"
+                          }`}
+                          style={{ padding: "3px 10px" }}
+                        >
+                          {pkg.badge}
+                        </div>
+                      )}
+                      <div className="flex flex-col items-center gap-4 w-full">
+                        <CoinStackIcon size={52} active={isSelected} />
+                        <div className="text-center">
+                          <div className={`text-3xl font-black font-display ${isSelected ? "text-[#1DB954]" : "text-white"}`}>
+                            {pkg.coins}
+                          </div>
+                          <div className="text-white/50 text-xs font-semibold mt-0.5">coins</div>
+                        </div>
+                      </div>
+                      <div className="text-center mt-4 w-full">
+                        <div className="text-white/60 text-xs font-semibold">{pkg.name}</div>
+                        <div className={`text-sm font-bold mt-1 ${isSelected ? "text-[#1DB954]" : "text-white"}`}>
+                          ₦{pkg.price.toLocaleString()}
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  
-                  <div className="my-2">
-                    <CoinStackIcon size={52} active={isSelected} />
-                  </div>
+                  );
+                })}
+              </div>
+            </div>
 
-                  <div className="text-center mt-4 mb-5">
-                    <p className="text-white text-3xl font-bold tracking-normal" style={{ fontFamily: "'DM Sans', 'Inter', sans-serif" }}>
-                      {pkg.coins}
-                    </p>
-                    <p className="text-[#A8A8A8] text-[10px] font-bold uppercase tracking-widest mt-1" style={{ fontFamily: "'DM Sans', 'Inter', sans-serif" }}>
-                      Coins
-                    </p>
-                  </div>
-
-                  <span 
-                    className={`text-xs font-bold px-4 py-1.5 rounded-xl transition-colors ${
-                      isSelected ? "bg-[#1DB954]/20 text-[#1DB954]" : "bg-white/5 text-white/70"
-                    }`}
-                    style={{
-                      fontFamily: "'DM Sans', 'Inter', sans-serif",
-                    }}
-                  >
-                    ₦{pkg.price.toLocaleString()}
-                  </span>
+            {/* Custom Amount */}
+            <div style={{ marginBottom: 48 }}>
+              <h2 className="text-white/60 text-xs font-bold tracking-wider uppercase mb-6 px-1">Or Enter Custom Amount</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <Input
+                  label="Coins"
+                  placeholder="e.g. 50"
+                  value={coin}
+                  onChange={(e) => handleCoinChange(e.target.value)}
+                  type="number"
+                />
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1C2029] border border-white/10 text-white/40 shadow-md">
+                  <ArrowDownUp size={16} />
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Separator */}
-        <div className="flex items-center gap-6" style={{ marginTop: 48, marginBottom: 48 }}>
-          <div className="flex-1 h-px bg-white/10"></div>
-          <span className="text-[10px] font-extrabold text-white/30 tracking-widest uppercase">Or Enter Custom Amount</span>
-          <div className="flex-1 h-px bg-white/10"></div>
-        </div>
-
-        {/* Inputs */}
-        <div className="bg-[#151922]/50 border border-white/5 rounded-3xl relative" style={{ padding: 32, marginBottom: 48 }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <Input
-              label="Coins"
-              placeholder="Enter coins"
-              value={coin}
-              onChange={(e) => handleCoinChange(e.target.value)}
-              error={!!coin && Number(coin) < 1 ? "Minimum 1 coin" : undefined}
-            />
-
-            {/* On desktop, show a horizontal double arrow or exchange rate. On mobile, show vertical */}
-            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex-col items-center justify-center">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1C2029] border border-white/10 text-white/50 shadow-lg">
-                <ArrowDownUp size={18} className="rotate-90" />
-              </div>
-              <span className="text-[9px] font-extrabold text-white/40 uppercase tracking-wider mt-1.5 bg-[#0F1219] px-2.5 py-0.5 rounded border border-white/5">
-                1 Coin = ₦25
-              </span>
-            </div>
-
-            <div className="flex md:hidden justify-center my-4">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1C2029] border border-white/10 text-white/40 shadow-md">
-                <ArrowDownUp size={16} />
+                <Input
+                  label="Amount (Naira)"
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={(e) => handleAmountChange(e.target.value)}
+                  error={!!amount && Number(amount) < 25 ? "Minimum ₦25" : undefined}
+                />
               </div>
             </div>
 
-            <Input
-              label="Amount (Naira)"
-              placeholder="Enter amount"
-              value={amount}
-              onChange={(e) => handleAmountChange(e.target.value)}
-              error={!!amount && Number(amount) < 25 ? "Minimum ₦25" : undefined}
-            />
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div style={{ marginTop: 48 }}>
-          <Button
-            text={`Fund Wallet with ₦${Number(amount || 0).toLocaleString()}`}
-            onClick={handlePay}
-            disabled={!isValid}
-            isLoading={loading}
-            style={{
-              height: 56,
-              borderRadius: 16,
-              fontSize: 16,
-              fontWeight: 800,
-            }}
-          />
-          <button
-            onClick={() => router.push("/dashboard/wallet")}
-            className="w-full text-center text-[#A8A8A8] hover:text-white transition-colors mt-6 text-sm font-medium underline py-2 cursor-pointer"
-            style={{ display: "block", marginTop: 24, marginBottom: 64 }}
-          >
-            Cancel and Return to Wallet
-          </button>
-        </div>
-        </>
+            {/* Actions */}
+            <div style={{ marginTop: 48 }}>
+              <Button
+                text={`Fund Wallet with ₦${Number(amount || 0).toLocaleString()}`}
+                onClick={handlePay}
+                disabled={!isValid}
+                isLoading={loading}
+                style={{ height: 56, borderRadius: 16, fontSize: 16, fontWeight: 800 }}
+              />
+              <button
+                onClick={() => router.push("/dashboard/wallet")}
+                className="w-full text-center text-[#A8A8A8] hover:text-white transition-colors mt-6 text-sm font-medium underline py-2 cursor-pointer"
+                style={{ display: "block", marginTop: 24, marginBottom: 64 }}
+              >
+                Cancel and Return to Wallet
+              </button>
+            </div>
+          </>
         )}
       </div>
 
@@ -427,11 +520,7 @@ function DepositForm() {
               <X size={24} />
             </button>
           </div>
-          <iframe
-            src={paymentUrl}
-            className="flex-1 w-full"
-            title="Paystack Payment"
-          />
+          <iframe src={paymentUrl} className="flex-1 w-full" title="Paystack Payment" />
         </div>
       )}
     </div>
