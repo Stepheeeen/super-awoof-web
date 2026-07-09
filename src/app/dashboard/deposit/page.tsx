@@ -145,139 +145,139 @@ function DepositForm() {
         </div>
 
         {user?.loginMode === "phone" || user?.phone ? (
-          <div className="flex flex-col gap-8 animate-fade-in max-w-2xl mx-auto">
+          <div className="flex flex-col gap-10 animate-fade-in max-w-2xl mx-auto">
             {/* Operator Header Card */}
-            <div className="relative overflow-hidden rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-[#1E1B15] to-[#12141C] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(255,198,0,0.05)] text-center flex flex-col items-center">
-              {/* Subtle top background glow */}
-              <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-yellow-500/10 rounded-full blur-[80px]" />
+            <div className="relative overflow-hidden rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-[#1E1B15] to-[#12141C] pt-12 pb-10 px-8 md:px-12 shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(255,198,0,0.04)] text-center flex flex-col items-center">
+              {/* Ambient top glow */}
+              <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-yellow-500/8 rounded-full blur-[100px] pointer-events-none" />
               
-              <div className="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 p-[1.5px] shadow-[0_8px_20px_rgba(245,166,35,0.25)] mb-6">
-                <div className="w-full h-full rounded-2xl bg-[#12141C] flex items-center justify-center">
-                  <Smartphone size={30} className="text-yellow-400" />
+              <div className="relative z-10 w-18 h-18 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 p-[1.5px] shadow-[0_8px_24px_rgba(245,166,35,0.3)] mb-7" style={{ width: 72, height: 72 }}>
+                <div className="w-full h-full rounded-2xl bg-[#14110A] flex items-center justify-center">
+                  <Smartphone size={32} className="text-yellow-400" />
                 </div>
               </div>
               
-              <span className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-extrabold uppercase tracking-widest mb-3">
+              <span className="relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-extrabold uppercase tracking-widest mb-5">
                 <Sparkles size={10} /> Official Operator Billing
               </span>
               
-              <h2 className="relative z-10 text-white text-3xl font-black font-display tracking-tight mb-3">MTN Airtime Recharge</h2>
-              <p className="relative z-10 text-white/65 text-sm max-w-md mx-auto mb-8 leading-relaxed">
-                Fund your wallet directly from your MTN line balance. Select a subscription pack below to generate an SMS or run the USSD code.
+              <h2 className="relative z-10 text-white text-4xl font-black font-display tracking-tight mb-4">MTN Airtime Recharge</h2>
+              <p className="relative z-10 text-white/60 text-sm max-w-sm mx-auto mb-10 leading-[1.8]">
+                Fund your wallet directly from your MTN line balance. Pick a plan below to activate via SMS or USSD.
               </p>
               
               {/* USSD Box */}
-              <div className="relative z-10 w-full max-w-md rounded-2xl bg-[#0B0D14] border border-white/5 p-6 shadow-inner flex flex-col items-center gap-3">
-                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">General Activation USSD</p>
-                <div className="flex items-center gap-3">
+              <div className="relative z-10 w-full max-w-md rounded-2xl bg-[#0B0D14] border border-white/5 pt-6 pb-5 px-7 shadow-inner flex flex-col items-center gap-4">
+                <p className="text-white/35 text-[10px] font-black uppercase tracking-[0.18em]">General Activation USSD</p>
+                <div className="flex items-center gap-4">
                   <a 
                     href="tel:*920*20138#" 
-                    className="text-2xl md:text-3xl font-black text-yellow-400 tracking-wider font-display hover:text-yellow-300 transition-colors"
+                    className="text-3xl font-black text-yellow-400 tracking-wider font-display hover:text-yellow-300 transition-colors leading-none"
                   >
                     *920*20138#
                   </a>
                   <button 
                     onClick={() => handleCopy("*920*20138#", "USSD code")}
-                    className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-white/50 hover:text-white transition-all cursor-pointer"
+                    className="flex-shrink-0 p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white/50 hover:text-white transition-all cursor-pointer"
                     title="Copy USSD Code"
                   >
-                    {copiedText === "*920*20138#" ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+                    {copiedText === "*920*20138#" ? <Check size={17} className="text-green-400" /> : <Copy size={17} />}
                   </button>
                 </div>
-                <p className="text-[10px] text-white/30 italic">Click the code to dial directly from your mobile device</p>
+                <p className="text-[11px] text-white/25 italic">Tap the code to dial on your mobile device</p>
               </div>
             </div>
 
             {/* Packages Section */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between px-1">
-                <h3 className="text-white/60 text-xs font-bold uppercase tracking-widest">Select SMS Plan</h3>
-                <span className="text-[10px] text-white/30 font-bold">Shortcode: 20138</span>
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center justify-between px-1 mb-1">
+                <h3 className="text-white/50 text-[11px] font-bold uppercase tracking-[0.15em]">Choose a Plan</h3>
+                <span className="text-[10px] text-white/25 font-semibold tracking-wide">SMS to 20138</span>
               </div>
               
-              <div className="grid gap-4">
+              <div className="flex flex-col gap-3">
                 {/* Daily Pack */}
-                <div className="group relative overflow-hidden rounded-2xl border border-white/5 bg-[#151922]/40 backdrop-blur-md p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 hover:border-white/10 hover:bg-[#151922]/60 hover:translate-y-[-2px] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 group-hover:text-yellow-400 group-hover:border-yellow-500/30 transition-all duration-300">
-                      <Send size={20} />
+                <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#131720] p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-white/12 hover:bg-[#181E2C] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+                  <div className="flex items-center gap-5">
+                    <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/35 group-hover:text-yellow-400 group-hover:border-yellow-500/25 group-hover:bg-yellow-500/5 transition-all duration-300">
+                      <Send size={22} strokeWidth={1.8} />
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-lg group-hover:text-white transition-colors">Daily (5 Coins)</h4>
-                      <p className="text-white/50 text-xs mt-0.5">Charged at ₦100 / day</p>
+                      <h4 className="text-white font-bold text-[17px] leading-snug">Daily (5 Coins)</h4>
+                      <p className="text-white/45 text-sm mt-1.5 font-medium">₦100 charged per day</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 self-end sm:self-auto">
+                  <div className="flex items-center gap-3 flex-shrink-0 self-end sm:self-auto">
                     <a 
                       href="sms:20138?body=SA1"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C2029] border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all text-xs font-bold"
+                      className="inline-flex items-center px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all text-sm font-semibold whitespace-nowrap"
                     >
                       Send SMS
                     </a>
                     <button 
                       onClick={() => handleCopy("SA1", "Daily package keyword")}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/20 transition-all text-xs font-black font-mono cursor-pointer"
+                      className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/20 hover:border-yellow-500/35 transition-all text-sm font-black font-mono cursor-pointer whitespace-nowrap min-w-[72px] justify-center"
                     >
-                      {copiedText === "SA1" ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                      {copiedText === "SA1" ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
                       SA1
                     </button>
                   </div>
                 </div>
 
                 {/* Weekly Pack */}
-                <div className="group relative overflow-hidden rounded-2xl border border-white/5 bg-[#151922]/40 backdrop-blur-md p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 hover:border-white/10 hover:bg-[#151922]/60 hover:translate-y-[-2px] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 group-hover:text-yellow-400 group-hover:border-yellow-500/30 transition-all duration-300">
-                      <Send size={20} />
+                <div className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#131720] p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-white/12 hover:bg-[#181E2C] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+                  <div className="flex items-center gap-5">
+                    <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-white/35 group-hover:text-yellow-400 group-hover:border-yellow-500/25 group-hover:bg-yellow-500/5 transition-all duration-300">
+                      <Send size={22} strokeWidth={1.8} />
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-lg group-hover:text-white transition-colors">Weekly (20 Coins)</h4>
-                      <p className="text-white/50 text-xs mt-0.5">Charged at ₦200 / week</p>
+                      <h4 className="text-white font-bold text-[17px] leading-snug">Weekly (20 Coins)</h4>
+                      <p className="text-white/45 text-sm mt-1.5 font-medium">₦200 charged per week</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 self-end sm:self-auto">
+                  <div className="flex items-center gap-3 flex-shrink-0 self-end sm:self-auto">
                     <a 
                       href="sms:20138?body=SA7"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C2029] border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all text-xs font-bold"
+                      className="inline-flex items-center px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all text-sm font-semibold whitespace-nowrap"
                     >
                       Send SMS
                     </a>
                     <button 
                       onClick={() => handleCopy("SA7", "Weekly package keyword")}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/20 transition-all text-xs font-black font-mono cursor-pointer"
+                      className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/20 hover:border-yellow-500/35 transition-all text-sm font-black font-mono cursor-pointer whitespace-nowrap min-w-[72px] justify-center"
                     >
-                      {copiedText === "SA7" ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                      {copiedText === "SA7" ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
                       SA7
                     </button>
                   </div>
                 </div>
 
                 {/* Monthly Pack (Best Value) */}
-                <div className="group relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#151922]/60 backdrop-blur-md p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 hover:border-yellow-500/35 hover:bg-[#1E1C1A]/40 hover:translate-y-[-2px] hover:shadow-[0_8px_30px_rgba(245,166,35,0.1)]">
-                  {/* Premium best value badge */}
-                  <div className="absolute top-0 right-0 bg-gradient-to-l from-yellow-400 to-amber-500 text-black text-[9px] font-black px-3.5 py-1 rounded-bl-lg uppercase tracking-wider shadow">
+                <div className="group relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#17140A] p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:border-yellow-500/35 hover:bg-[#1E1A0E] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(245,166,35,0.12)]">
+                  {/* Best Value badge — top-left so it never overlaps the buttons */}
+                  <div className="absolute top-0 left-0 bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-[9px] font-black px-3 py-1.5 rounded-br-xl uppercase tracking-widest shadow">
                     Best Value
                   </div>
                   
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 group-hover:border-yellow-500/40 transition-all duration-300">
-                      <Sparkles size={20} />
+                  <div className="flex items-center gap-5 mt-3 sm:mt-0">
+                    <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 group-hover:border-yellow-500/40 group-hover:bg-yellow-500/15 transition-all duration-300">
+                      <Sparkles size={22} strokeWidth={1.8} />
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-lg group-hover:text-yellow-300 transition-colors">Monthly (50 Coins)</h4>
-                      <p className="text-white/50 text-xs mt-0.5">Charged at ₦500 / month</p>
+                      <h4 className="text-white font-bold text-[17px] leading-snug group-hover:text-yellow-300 transition-colors">Monthly (50 Coins)</h4>
+                      <p className="text-white/45 text-sm mt-1.5 font-medium">₦500 charged per month</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 self-end sm:self-auto">
+                  <div className="flex items-center gap-3 flex-shrink-0 self-end sm:self-auto">
                     <a 
                       href="sms:20138?body=SA30"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1C2029] border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all text-xs font-bold"
+                      className="inline-flex items-center px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 hover:border-white/15 transition-all text-sm font-semibold whitespace-nowrap"
                     >
                       Send SMS
                     </a>
                     <button 
                       onClick={() => handleCopy("SA30", "Monthly package keyword")}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-400 text-black hover:bg-yellow-300 transition-all text-xs font-black font-mono cursor-pointer shadow-md shadow-yellow-500/10"
+                      className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-yellow-400 text-black hover:bg-yellow-300 transition-all text-sm font-black font-mono cursor-pointer shadow-lg shadow-yellow-500/15 whitespace-nowrap min-w-[80px] justify-center"
                     >
                       {copiedText === "SA30" ? <Check size={14} className="text-black" /> : <Copy size={14} />}
                       SA30
@@ -289,9 +289,9 @@ function DepositForm() {
 
             <button
               onClick={() => router.push("/dashboard/wallet")}
-              className="w-full text-center text-[#A8A8A8] hover:text-white transition-colors mt-4 text-sm font-medium underline py-2 cursor-pointer"
+              className="w-full text-center text-white/35 hover:text-white/70 transition-colors text-sm font-medium py-4 cursor-pointer"
             >
-              Return to Wallet
+              ← Return to Wallet
             </button>
           </div>
         ) : (
