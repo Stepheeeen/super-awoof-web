@@ -114,6 +114,14 @@ function DepositForm() {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="page-container min-h-screen bg-[#0F1219] flex items-center justify-center">
+        <div className="spinner" />
+      </div>
+    );
+  }
+
   return (
     <div className="page-container min-h-screen bg-[#0F1219] animate-fade-in" style={{ padding: "64px 28px 160px 28px" }}>
       <div style={{ maxWidth: 850, margin: "0 auto", width: "100%" }}>
@@ -128,7 +136,7 @@ function DepositForm() {
           <h1 className="text-white font-bold text-3xl font-display tracking-wide">Deposit Coins</h1>
         </div>
 
-        {user?.loginMode === "phone" ? (
+        {user?.loginMode === "phone" || user?.phone ? (
           <div className="flex flex-col gap-6 animate-fade-in">
             <div className="card bg-[#151922] border border-white/10 rounded-3xl p-8 flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-full bg-yellow-500/10 flex items-center justify-center mb-6 border border-yellow-500/20">
