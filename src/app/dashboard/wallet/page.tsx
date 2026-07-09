@@ -201,8 +201,8 @@ function WalletContent() {
                       {tx.type === "credit" ? <ArrowDownLeft size={24} /> : <ArrowUpRight size={24} />}
                     </div>
                     <div>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: "white", textTransform: "capitalize" }}>
-                        {tx.type === "credit" ? "Deposit" : "Withdrawal"}
+                      <p style={{ fontSize: 16, fontWeight: 700, color: "white" }}>
+                        {tx.label || (tx.type === "credit" ? "Deposit" : "Withdrawal")}
                       </p>
                       <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 4 }}>
                         {new Date(tx.date).toLocaleDateString("en-US", {
@@ -226,7 +226,7 @@ function WalletContent() {
                       {tx.type === "credit" ? "+" : "-"}₦{tx.amount.toLocaleString()}
                     </p>
                     <p style={{ fontSize: 12, color: "var(--muted)", textTransform: "uppercase", marginTop: 4, letterSpacing: "0.05em" }}>
-                      {tx.method === "paystack" ? "Paystack" : "Bank"}
+                      {tx.method === "paystack" ? "Paystack" : tx.method === "mtn_billing" ? "MTN Billing" : "Bank"}
                     </p>
                   </div>
                 </div>
