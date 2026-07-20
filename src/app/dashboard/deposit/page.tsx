@@ -149,15 +149,18 @@ function DepositForm() {
               <CoinStackIcon size={40} active={true} />
             </div>
             <h2 style={{ color: "white", fontSize: 24, fontWeight: 700 }}>
-              Coming Soon
+              On-Demand Deposits Coming Soon
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 15, maxWidth: 400 }}>
-              We are working hard to bring you a seamless deposit experience. Please check back later!
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 15, maxWidth: 480, lineHeight: 1.6 }}>
+              Your wallet will be replenished with more coins tomorrow (before your subscription elapses). Please check back then to continue playing!
+            </p>
+            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, maxWidth: 480, lineHeight: 1.5, marginTop: -4 }}>
+              If your subscription has expired, you can re-subscribe by sending <span style={{ color: "#1DB954", fontWeight: 600 }}>SA1</span> to <span style={{ color: "#1DB954", fontWeight: 600 }}>20138</span> on your MTN device.
             </p>
             <Button
               text="Return to Wallet"
               onClick={() => router.push("/dashboard/wallet")}
-              style={{ marginTop: 24, padding: "0 32px", height: 48, borderRadius: 12 }}
+              style={{ marginTop: 16, padding: "0 32px", height: 48, borderRadius: 12 }}
             />
           </div>
 
